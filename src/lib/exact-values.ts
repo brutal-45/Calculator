@@ -79,8 +79,9 @@ const constantValues: Record<number, string> = {
 /**
  * Try to find an exact form for a computed decimal result.
  * Returns the exact string form, or null if no match found.
+ * @param angleUnit - 'deg' or 'rad'. Used to verify trig lookups match actual decimal.
  */
-export function findExactForm(decimalResult: number, expression?: string): string | null {
+export function findExactForm(decimalResult: number, expression?: string, angleUnit: string = 'deg'): string | null {
   if (!isFinite(decimalResult) || isNaN(decimalResult)) return null
 
   // 1. Check if it's an integer
@@ -99,7 +100,18 @@ export function findExactForm(decimalResult: number, expression?: string): strin
         const entry = exactTrigValues[angleKey]
         if (entry) {
           const exact = entry[fn as 'sin' | 'cos' | 'tan']
-          if (exact) return exact
+          if (exact) {
+            // Verify the decimal result actually matches the trig function at this angle
+            if (angleUnit === 'deg') {
+              const rad = angleKey * Math.PI / 180
+              const expected = fn === 'sin' ? Math.sin(rad) : fn === 'cos' ? Math.cos(rad) : Math.tan(rad)
+              if (approx(decimalResult, expected) || (fn === 'tan' && !isFinite(expected) && !isFinite(decimalResult))) {
+                return exact
+              }
+            }
+            // In RAD mode, only match if the angle happens to produce the same decimal
+            // (e.g. sin(π/6) ≈ 0.5, but the expression would show sin(0.524), not sin(30))
+          }
         }
       }
     }
@@ -113,9 +125,12 @@ export function findExactForm(decimalResult: number, expression?: string): strin
       if (Math.abs(decimalResult - roundDeg) < 1e-9 && roundDeg >= 0 && roundDeg <= 360) {
         const entry = exactTrigValues[roundDeg]
         if (entry) {
-          if (fn === 'sin⁻¹' && entry.sin && entry.sin !== '0' && entry.sin !== '1') return `${roundDeg}°`
-          if (fn === 'cos⁻¹' && entry.cos && entry.cos !== '0' && entry.cos !== '1') return `${roundDeg}°`
-          if (fn === 'tan⁻¹' && entry.tan && entry.tan !== '0' && entry.tan !== '1') return `${roundDeg}°`
+          // Only return exact angle in DEG mode (results are in degrees)
+          if (angleUnit === 'deg') {
+            if (fn === 'sin⁻¹' && entry.sin && entry.sin !== '0' && entry.sin !== '1') return `${roundDeg}°`
+            if (fn === 'cos⁻¹' && entry.cos && entry.cos !== '0' && entry.cos !== '1') return `${roundDeg}°`
+            if (fn === 'tan⁻¹' && entry.tan && entry.tan !== '0' && entry.tan !== '1') return `${roundDeg}°`
+          }
         }
       }
     }

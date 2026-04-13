@@ -188,7 +188,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     const result = evaluateExpression(fullExpr, angleUnit)
     if (result !== 'Error') {
       const numResult = parseFloat(result)
-      const exact = findExactForm(numResult, fullExpr)
+      const exact = findExactForm(numResult, fullExpr, angleUnit)
       const historyItem: HistoryItem = { expression: fullExpr, result, exactForm: exact, mode }
       const newHistory = [historyItem, ...get().history].slice(0, 50)
       set({
@@ -246,7 +246,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     }
 
     const formatted = formatResult(result)
-    const exact = findExactForm(result, newExpr)
+    const exact = findExactForm(result, newExpr, angleUnit)
     set({ expression: newExpr + ' =', previousResult: formatted, display: formatted, exactDisplay: exact, hasResult: true, showAC: true })
   },
 

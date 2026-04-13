@@ -8,14 +8,14 @@ import { ReferenceTablesPanel } from './reference-tables'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calculator, History, Atom, Zap, Keyboard, TableProperties } from 'lucide-react'
-import { useEffect, useCallback } from 'react'
+import { Calculator, History, Atom, Zap, Keyboard, TableProperties, Github, ExternalLink, Settings2, Check, X } from 'lucide-react'
+import { useEffect, useCallback, useState } from 'react'
 import { type HistoryItem } from '@/stores/calculator-store'
 
 /* ────── BrutalTools Logo ────── */
 function BrutalToolsLogo({ size = 36 }: { size?: number }) {
   const s = size
-  const id = `blogo-${Math.random().toString(36).slice(2, 8)}`
+  const id = 'blogo'
 
   return (
     <div
@@ -148,6 +148,94 @@ function BrutalToolsLogo({ size = 36 }: { size?: number }) {
   )
 }
 
+/* ────── GitHub Link Button ────── */
+const GH_KEY = 'brutaltools-github-url'
+
+function GitHubLink() {
+  const [url, setUrl] = useState(() => localStorage.getItem(GH_KEY) || '')
+  const [editing, setEditing] = useState(false)
+  const [inputVal, setInputVal] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  const handleSave = () => {
+    let v = inputVal.trim()
+    if (v && !v.startsWith('http')) v = 'https://' + v
+    if (v) {
+      localStorage.setItem(GH_KEY, v)
+      setUrl(v)
+      setEditing(false)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 1500)
+    }
+  }
+
+  const handleOpen = () => {
+    if (url) window.open(url, '_blank', 'noopener,noreferrer')
+    else { setEditing(true); setInputVal('') }
+  }
+
+  const handleRemove = () => {
+    localStorage.removeItem(GH_KEY)
+    setUrl('')
+    setEditing(false)
+  }
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {editing ? (
+        <div className="flex items-center gap-1.5 animate-in fade-in slide-in-from-bottom-1 duration-200">
+          <input
+            type="text"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            placeholder="https://github.com/..."
+            className="w-40 sm:w-52 h-7 px-2 text-[11px] bg-zinc-800 border border-white/[0.1] rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all"
+            autoFocus
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setEditing(false) }}
+          />
+          <button onClick={handleSave} className="p-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-colors cursor-pointer" aria-label="Save">
+            <Check className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={() => setEditing(false)} className="p-1 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer" aria-label="Cancel">
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      ) : (
+        <>
+          <button
+            onClick={handleOpen}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/[0.04] text-zinc-500 hover:text-zinc-300 transition-all cursor-pointer group"
+            aria-label={url ? 'Open GitHub' : 'Set GitHub link'}
+          >
+            {saved ? (
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Github className="w-3.5 h-3.5 group-hover:text-white transition-colors" />
+            )}
+            {url && <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />}
+          </button>
+          <button
+            onClick={() => { setEditing(true); setInputVal(url); }}
+            className="p-1.5 rounded-lg hover:bg-white/[0.04] text-zinc-600 hover:text-zinc-400 transition-all cursor-pointer"
+            aria-label="Edit GitHub link"
+          >
+            <Settings2 className="w-3 h-3" />
+          </button>
+          {url && (
+            <button
+              onClick={handleRemove}
+              className="p-1.5 rounded-lg hover:bg-red-500/10 text-zinc-600 hover:text-red-400 transition-all cursor-pointer"
+              aria-label="Remove GitHub link"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 export function CalculatorApp() {
   const {
     mode, setMode, setHistory,
@@ -163,7 +251,7 @@ export function CalculatorApp() {
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const k = e.key
-    if (/^[0-9.+\-*/=%()^c]$/i.test(k) || k === 'Enter' || k === 'Backspace' || k === 'Escape') e.preventDefault()
+    if (/^[0-9.+\-*/=%()=]$/i.test(k) || k === 'Enter' || k === 'Backspace' || k === 'Escape') e.preventDefault()
     switch (k) {
       case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9': appendDigit(k); break
       case '+': appendOperator('+'); break
@@ -282,13 +370,16 @@ export function CalculatorApp() {
 
       {/* footer */}
       <footer className="relative z-10 border-t border-white/[0.04] bg-zinc-950/80 backdrop-blur-sm">
-        <div className="max-w-[420px] mx-auto px-4 py-3 flex items-center justify-center gap-2.5">
-          <BrutalToolsLogo size={16} />
-          <p className="text-[11px] text-zinc-500 text-center">
-            Developed under{' '}
-            <span className="font-bold bg-gradient-to-r from-emerald-400 to-amber-400 bg-clip-text text-transparent">BrutalTools</span>
-          </p>
-          <Zap className="w-3 h-3 text-amber-500/60" />
+        <div className="max-w-[520px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-shrink-0">
+            <BrutalToolsLogo size={16} />
+            <p className="text-[11px] text-zinc-500 text-center">
+              Developed under{' '}
+              <span className="font-bold bg-gradient-to-r from-emerald-400 to-amber-400 bg-clip-text text-transparent">BrutalTools</span>
+            </p>
+            <Zap className="w-3 h-3 text-amber-500/60" />
+          </div>
+          <GitHubLink />
         </div>
       </footer>
     </div>

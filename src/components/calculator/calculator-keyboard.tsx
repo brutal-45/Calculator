@@ -106,9 +106,7 @@ export function BasicCalculator() {
       />
       <Btn icon={<span className="text-lg font-bold">±</span>} onClick={store.toggleSign} variant="fn" />
       <Btn icon={<Percent className="w-5 h-5" />} onClick={store.percentage} variant="fn" />
-      <Btn label="÷" onClick={() => store.appendOperator('÷')} variant="operator">
-        <span className="text-2xl">÷</span>
-      </Btn>
+      <Btn label="÷" onClick={() => store.appendOperator('÷')} variant="operator" />
 
       {/* Row 2 */}
       <Btn label="7" onClick={() => store.appendDigit('7')} />
