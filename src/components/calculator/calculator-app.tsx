@@ -14,27 +14,136 @@ import { type HistoryItem } from '@/stores/calculator-store'
 
 /* ────── BrutalTools Logo ────── */
 function BrutalToolsLogo({ size = 36 }: { size?: number }) {
+  const s = size
+  const id = `blogo-${Math.random().toString(36).slice(2, 8)}`
+
   return (
     <div
-      className="relative flex items-center justify-center overflow-hidden shadow-lg shadow-emerald-900/30"
-      style={{ width: size, height: size, borderRadius: size * 0.26 }}
+      className="relative flex items-center justify-center flex-shrink-0"
+      style={{ width: s, height: s }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-700" />
-      {/* grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.07]" aria-hidden="true">
-        <defs><pattern id="g" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M6 0L0 0 0 6" fill="none" stroke="white" strokeWidth="1"/></pattern></defs>
-        <rect width="100%" height="100%" fill="url(#g)"/>
+      {/* outer glow ring */}
+      <div
+        className="absolute rounded-full animate-pulse"
+        style={{
+          inset: -s * 0.08,
+          background: 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%)',
+        }}
+      />
+
+      {/* main icon container */}
+      <svg
+        viewBox="0 0 64 64"
+        fill="none"
+        className="relative z-10 w-full h-full"
+        aria-hidden="true"
+      >
+        <defs>
+          {/* background gradient */}
+          <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#0f172a" />
+            <stop offset="100%" stopColor="#1e293b" />
+          </linearGradient>
+
+          {/* border gradient */}
+          <linearGradient id={`${id}-border`} x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#34d399" />
+            <stop offset="50%" stopColor="#10b981" />
+            <stop offset="100%" stopColor="#fbbf24" />
+          </linearGradient>
+
+          {/* bolt gradient */}
+          <linearGradient id={`${id}-bolt`} x1="26" y1="12" x2="40" y2="52" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#fde68a" />
+            <stop offset="45%" stopColor="#fbbf24" />
+            <stop offset="100%" stopColor="#f59e0b" />
+          </linearGradient>
+
+          {/* inner glow for bolt */}
+          <linearGradient id={`${id}-bolt-inner`} x1="30" y1="16" x2="36" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#fef3c7" />
+            <stop offset="100%" stopColor="#fbbf24" />
+          </linearGradient>
+
+          {/* B letter gradient */}
+          <linearGradient id={`${id}-letter`} x1="8" y1="16" x2="30" y2="50" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#6ee7b7" />
+            <stop offset="100%" stopColor="#34d399" />
+          </linearGradient>
+
+          {/* subtle shine overlay */}
+          <linearGradient id={`${id}-shine`} x1="0" y1="0" x2="0" y2="32" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="white" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </linearGradient>
+
+          {/* drop shadow */}
+          <filter id={`${id}-shadow`} x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#059669" floodOpacity="0.4" />
+          </filter>
+
+          {/* bolt glow */}
+          <filter id={`${id}-glow`} x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* background rounded square */}
+        <rect
+          x="3" y="3" width="58" height="58" rx="16"
+          fill={`url(#${id}-bg)`}
+          stroke={`url(#${id}-border)`}
+          strokeWidth="1.5"
+          filter={`url(#${id}-shadow)`}
+        />
+
+        {/* inner border accent line */}
+        <rect
+          x="5" y="5" width="54" height="54" rx="14"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.05"
+          strokeWidth="0.5"
+        />
+
+        {/* stylized "B" letter */}
+        <path
+          d="M18 46V18h12c3.3 0 6 2.7 6 6s-2.7 6-6 6h-12m0 0h13c3.3 0 6 2.7 6 6s-2.7 6-6 6H18"
+          fill="none"
+          stroke={`url(#${id}-letter)`}
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.9"
+        />
+
+        {/* lightning bolt cutting through the B */}
+        <path
+          d="M37 12L28 30h6.5L26 52L44 26h-7.5L41 12H37Z"
+          fill={`url(#${id}-bolt)`}
+          filter={`url(#${id}-glow)`}
+        />
+
+        {/* bolt inner highlight */}
+        <path
+          d="M37.5 16L31 29h5l-6.5 18L41 27h-5.5L39 16h-1.5Z"
+          fill={`url(#${id}-bolt-inner)`}
+          opacity="0.45"
+        />
+
+        {/* top shine */}
+        <ellipse
+          cx="32" cy="20" rx="22" ry="14"
+          fill={`url(#${id}-shine)`}
+        />
+
+        {/* corner sparkle */}
+        <circle cx="8" cy="8" r="1.2" fill="#fbbf24" opacity="0.7" />
       </svg>
-      {/* bolt */}
-      <svg viewBox="0 0 24 24" fill="none" className="relative z-10 drop-shadow-sm"
-        style={{ width: size * 0.48, height: size * 0.48 }} aria-hidden="true">
-        <path d="M13 2L4.5 13H11L10 22L19.5 11H13L13 2Z" fill="#FBBF24" stroke="#B45309" strokeWidth="0.3" strokeLinejoin="round"/>
-        <path d="M13 5L7 12.5H11.5L10.5 19L17 11H12.5L13 5Z" fill="#FDE68A" opacity="0.5"/>
-      </svg>
-      {/* shine */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-      {/* dot */}
-      <div className="absolute -top-[2px] -right-[2px] w-[6px] h-[6px] rounded-full bg-amber-400 border-[1.5px] border-zinc-900 z-20" />
     </div>
   )
 }
