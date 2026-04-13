@@ -26,6 +26,9 @@ interface CalculatorState {
   // History
   history: HistoryItem[]
 
+  // Derived: should show AC or CE
+  showAC: boolean
+
   // Actions
   appendDigit: (digit: string) => void
   appendOperator: (op: string) => void
@@ -44,7 +47,6 @@ interface CalculatorState {
   applyHistoryItem: (item: HistoryItem) => void
   clearHistory: () => void
   setHistory: (items: HistoryItem[]) => void
-  addHistoryItem: (item: HistoryItem) => void
 }
 
 function factorial(n: number): number {
@@ -104,34 +106,22 @@ function formatResult(num: number): string {
 
 function evaluateExpression(expr: string, angleUnit: AngleUnit): string {
   try {
-    // Replace display symbols with math operators
     let sanitized = expr
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
       .replace(/π/g, `(${Math.PI})`)
       .replace(/e(?![xp])/g, `(${Math.E})`)
       .replace(/√\(/g, 'Math.sqrt(')
-      .replace(/sin⁻¹\(/g, `Math.asin(`)
-      .replace(/cos⁻¹\(/g, `Math.acos(`)
-      .replace(/tan⁻¹\(/g, `Math.atan(`)
-      .replace(/sin\(/g, `Math.sin(`)
-      .replace(/cos\(/g, `Math.cos(`)
-      .replace(/tan\(/g, `Math.tan(`)
-      .replace(/log\(/g, `Math.log10(`)
-      .replace(/ln\(/g, `Math.log(`)
-      .replace(/abs\(/g, `Math.abs(`)
-
-    // Handle angle-based trig functions
-    if (angleUnit === 'deg') {
-      sanitized = sanitized
-        .replace(/Math\.sin\(/g, 'Math.sin((')
-        .replace(/Math\.cos\(/g, 'Math.cos((')
-        .replace(/Math\.tan\(/g, 'Math.tan((')
-        .replace(/Math\.asin\(/g, '(Math.asin(')
-        .replace(/Math\.acos\(/g, '(Math.acos(')
-        .replace(/Math\.atan\(/g, '(Math.atan(')
-      // This is complex - use a simpler approach
-    }
+      .replace(/∛\(/g, 'Math.cbrt(')
+      .replace(/sin⁻¹\(/g, 'Math.asin(')
+      .replace(/cos⁻¹\(/g, 'Math.acos(')
+      .replace(/tan⁻¹\(/g, 'Math.atan(')
+      .replace(/sin\(/g, 'Math.sin(')
+      .replace(/cos\(/g, 'Math.cos(')
+      .replace(/tan\(/g, 'Math.tan(')
+      .replace(/log\(/g, 'Math.log10(')
+      .replace(/ln\(/g, 'Math.log(')
+      .replace(/abs\(/g, 'Math.abs(')
 
     // Handle implicit multiplication: 2π, 3(, )(
     sanitized = sanitized.replace(/(\d)(\()/g, '$1*$2')
@@ -146,10 +136,10 @@ function evaluateExpression(expr: string, angleUnit: AngleUnit): string {
     sanitized = sanitized.replace(/([\d.]+)³/g, 'Math.pow($1,3)')
     sanitized = sanitized.replace(/\^/g, '**')
 
-    // Handle 1/x notation
-    sanitized = sanitized.replace(/⁻¹(?!\()/g, ')') // This should have been handled
+    // Handle 1/x
+    sanitized = sanitized.replace(/⁻¹(?!\()/g, ')')
 
-    // For degree mode, wrap trig args with degToRad
+    // For degree mode, wrap trig args
     if (angleUnit === 'deg') {
       sanitized = sanitized
         .replace(/Math\.sin\(([^)]+)\)/g, (_, arg) => `Math.sin(((${arg})*Math.PI/180))`)
@@ -161,12 +151,7 @@ function evaluateExpression(expr: string, angleUnit: AngleUnit): string {
         .replace(/Math\.atan\(([^)]+)\)/g, (_, arg) => `(Math.atan(${arg})*180/Math.PI)`)
     }
 
-    // Validate expression
-    if (/[^0-9+\-*/.()Math sincotaglqrpbwPE, ]/.test(sanitized)) {
-      return 'Error'
-    }
-
-    // Use Function constructor for safe evaluation
+    // Use Function constructor for evaluation
     const fn = new Function(`"use strict"; return (${sanitized})`)
     const result = fn()
 
@@ -175,6 +160,14 @@ function evaluateExpression(expr: string, angleUnit: AngleUnit): string {
   } catch {
     return 'Error'
   }
+}
+
+// Helper: compute whether to show AC or CE
+function computeShowAC(display: string, expression: string, hasResult: boolean): boolean {
+  // Show AC when there's nothing meaningful to clear-entry, or after a result
+  if (hasResult) return true
+  if (expression === '' && (display === '0' || display === '')) return true
+  return false
 }
 
 export const useCalculatorStore = create<CalculatorState>((set, get) => ({
@@ -186,19 +179,21 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
   hasResult: false,
   parenthesesCount: 0,
   history: [],
+  showAC: true,
 
   appendDigit: (digit: string) => {
-    const { display, hasResult } = get()
+    const { display, hasResult, expression, parenthesesCount } = get()
     if (hasResult) {
-      set({ display: digit, expression: '', hasResult: false, parenthesesCount: 0 })
+      // Start fresh after a result
+      set({ display: digit, expression: '', hasResult: false, parenthesesCount: 0, showAC: false })
       return
     }
     if (display === '0' && digit !== '0') {
-      set({ display: digit })
+      set({ display: digit, showAC: false })
     } else if (display === '0' && digit === '0') {
       return
     } else if (display.length < 16) {
-      set({ display: display + digit })
+      set({ display: display + digit, showAC: false })
     }
   },
 
@@ -209,6 +204,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
         expression: previousResult + ' ' + op + ' ',
         display: '0',
         hasResult: false,
+        showAC: true,
       })
       return
     }
@@ -220,24 +216,25 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
       display: '0',
       hasResult: false,
       parenthesesCount: 0,
+      showAC: true,
     })
   },
 
   appendDecimal: () => {
     const { display, hasResult } = get()
     if (hasResult) {
-      set({ display: '0.', expression: '', hasResult: false })
+      set({ display: '0.', expression: '', hasResult: false, showAC: false })
       return
     }
     if (!display.includes('.')) {
-      set({ display: display + '.' })
+      set({ display: display + '.', showAC: false })
     }
   },
 
   appendParenthesis: (paren: string) => {
     const { display, expression, parenthesesCount, hasResult } = get()
     if (hasResult && paren === '(') {
-      set({ expression: '', display: '0', hasResult: false, parenthesesCount: 1 })
+      set({ expression: '', display: '0', hasResult: false, parenthesesCount: 1, showAC: false })
       return
     }
     if (hasResult && paren === ')') {
@@ -245,15 +242,16 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     }
     if (paren === '(') {
       if (display !== '0' || expression.length > 0) {
-        // Add current display to expression and open paren
         set({
           expression: expression + display + ' × (',
           display: '0',
           parenthesesCount: parenthesesCount + 1,
+          showAC: true,
         })
       } else {
         set({
           parenthesesCount: parenthesesCount + 1,
+          showAC: false,
         })
       }
     } else if (paren === ')' && parenthesesCount > 0) {
@@ -272,20 +270,51 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
       expression: '',
       hasResult: false,
       parenthesesCount: 0,
+      previousResult: null,
+      showAC: true,
     })
   },
 
   clearEntry: () => {
-    set({ display: '0' })
+    const { hasResult } = get()
+    if (hasResult) {
+      // After a result, CE behaves like AC
+      set({
+        display: '0',
+        expression: '',
+        hasResult: false,
+        parenthesesCount: 0,
+        previousResult: null,
+        showAC: true,
+      })
+      return
+    }
+    // Clear just the current number entry
+    set({ display: '0', showAC: true })
   },
 
   backspace: () => {
     const { display, hasResult } = get()
-    if (hasResult) return
+    if (hasResult) {
+      // After result, backspace clears everything
+      set({
+        display: '0',
+        expression: '',
+        hasResult: false,
+        parenthesesCount: 0,
+        previousResult: null,
+        showAC: true,
+      })
+      return
+    }
     if (display.length > 1) {
-      set({ display: display.slice(0, -1) })
+      const newDisplay = display.slice(0, -1)
+      set({
+        display: newDisplay === '-' ? '0' : newDisplay,
+        showAC: newDisplay === '-' || newDisplay === '',
+      })
     } else {
-      set({ display: '0' })
+      set({ display: '0', showAC: true })
     }
   },
 
@@ -295,7 +324,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     // Auto-close parentheses
     for (let i = 0; i < parenthesesCount; i++) fullExpr += ')'
 
-    if (!fullExpr || fullExpr.trim() === '') return
+    if (!fullExpr || fullExpr.trim() === '' || fullExpr.trim() === '0') return
 
     const result = evaluateExpression(fullExpr, angleUnit)
     if (result !== 'Error') {
@@ -308,10 +337,11 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
       set({
         previousResult: result,
         display: result,
-        expression: '',
+        expression: fullExpr + ' =',
         hasResult: true,
         history: newHistory,
         parenthesesCount: 0,
+        showAC: true,
       })
       // Save to database
       fetch('/api/calculations', {
@@ -320,18 +350,19 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
         body: JSON.stringify(historyItem),
       }).catch(() => {})
     } else {
-      set({ display: 'Error', hasResult: true })
+      set({ display: 'Error', hasResult: true, showAC: true })
     }
   },
 
   toggleSign: () => {
     const { display, hasResult } = get()
-    if (hasResult || display === '0' || display === 'Error') return
+    if (display === '0' || display === 'Error') return
     if (display.startsWith('-')) {
       set({ display: display.slice(1) })
     } else {
       set({ display: '-' + display })
     }
+    // Keep hasResult as-is so user can toggle sign of a result
   },
 
   percentage: () => {
@@ -339,13 +370,13 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     if (hasResult) return
     const value = parseFloat(display)
     if (isNaN(value)) return
-    set({ display: formatResult(value / 100) })
+    set({ display: formatResult(value / 100), showAC: false })
   },
 
   scientificFunction: (fn: string) => {
     const { display, hasResult, angleUnit } = get()
     let value = parseFloat(display)
-    if (isNaN(value) && !display.includes('Error')) return
+    if (isNaN(value) && display !== 'Error') return
 
     let result: number
     let newExpr: string
@@ -428,37 +459,27 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     }
 
     const formattedResult = formatResult(result)
-    if (hasResult) {
-      set({
-        previousResult: formattedResult,
-        display: formattedResult,
-        expression: '',
-        hasResult: true,
-      })
-    } else {
-      set({
-        expression: newExpr + ' = ',
-        previousResult: formattedResult,
-        display: formattedResult,
-        hasResult: true,
-      })
-    }
+    set({
+      expression: newExpr + ' =',
+      previousResult: formattedResult,
+      display: formattedResult,
+      hasResult: true,
+      showAC: true,
+    })
   },
 
   insertConstant: (constant: string) => {
     const { display, hasResult } = get()
+    const value = constant === 'π' ? Math.PI.toString() : Math.E.toString()
     if (hasResult) {
-      const value = constant === 'π' ? Math.PI.toString() : Math.E.toString()
-      set({ display: value, expression: '', hasResult: false, parenthesesCount: 0 })
+      set({ display: value, expression: '', hasResult: false, parenthesesCount: 0, showAC: false })
       return
     }
     if (display === '0') {
-      const value = constant === 'π' ? Math.PI.toString() : Math.E.toString()
-      set({ display: value })
+      set({ display: value, showAC: false })
     } else {
-      // Multiply current display by constant
-      const value = constant === 'π' ? 'π' : 'e'
-      set({ expression: display + ' × ', display: value, hasResult: false })
+      const symbol = constant === 'π' ? 'π' : 'e'
+      set({ expression: display + ' × ', display: symbol, hasResult: false })
     }
   },
 
@@ -477,6 +498,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
       previousResult: item.result,
       hasResult: true,
       parenthesesCount: 0,
+      showAC: true,
     })
   },
 
@@ -487,11 +509,5 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
 
   setHistory: (items: HistoryItem[]) => {
     set({ history: items })
-  },
-
-  addHistoryItem: (item: HistoryItem) => {
-    set((state) => ({
-      history: [item, ...state.history].slice(0, 50),
-    }))
   },
 }))

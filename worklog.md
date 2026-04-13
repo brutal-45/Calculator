@@ -38,3 +38,32 @@ Stage Summary:
 - Calculation history with database persistence
 - Beautiful dark UI with animations
 - Responsive design for all screen sizes
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix CE clearing, improve UI/UX, add / keyboard support, BrutalTools copyright
+
+Work Log:
+- Fixed `clearEntry` (CE) to properly clear after a result (behaves as AC post-result)
+- Fixed `backspace` to work after getting a result (clears everything when result shown)
+- Fixed `toggleSign` (±) to work on result values too
+- Added dynamic AC/CE toggle button — shows "AC" when nothing to clear-entry, "CE" otherwise
+- Added backspace button to both Basic and Scientific modes
+- Confirmed `/` keyboard shortcut works for division (maps to ÷)
+- Updated keyboard handler: `Escape` = AC, `Delete` = CE
+- Redesigned display with live expression preview (shows full expression as user types)
+- Results shown in emerald green for visual distinction
+- Redesigned all buttons with gradient operators (amber) and equals (emerald), better press feedback via spring animations
+- Improved overall spacing, border treatments, and glassmorphism effects
+- Added "Developed under BrutalTools" copyright in sticky footer with Zap icon
+- Added "by BrutalTools" subtitle in header
+- Updated keyboard hint bar with Keyboard icon and clearer shortcut list
+- Cleaned up unused imports
+- All lint checks pass
+
+Stage Summary:
+- All calculator clearing behaviors (AC, CE, backspace) work correctly in all states
+- `/` key divides numbers from keyboard
+- Polished UI with gradients, spring animations, live expression preview
+- BrutalTools branding in header and sticky footer

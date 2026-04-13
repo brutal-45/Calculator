@@ -4,37 +4,58 @@ import { useCalculatorStore } from '@/stores/calculator-store'
 import { motion } from 'framer-motion'
 
 export function CalculatorDisplay() {
-  const { display, expression, hasResult } = useCalculatorStore()
+  const { display, expression, hasResult, parenthesesCount } = useCalculatorStore()
 
-  const fontSize = display.length > 12 ? 'text-2xl' : display.length > 8 ? 'text-3xl' : 'text-5xl'
+  // Build the live expression preview for the user
+  let previewExpr = expression
+  if (!hasResult && display !== '0') {
+    previewExpr = expression + display
+  } else if (!hasResult && display === '0' && expression) {
+    previewExpr = expression + '0'
+  }
+  // Show trailing parentheses count
+  if (!hasResult && parenthesesCount > 0) {
+    for (let i = 0; i < parenthesesCount; i++) previewExpr += ')'
+  }
+
+  const showPreview = previewExpr && previewExpr.trim() !== ''
+
+  // Auto-size the main display
+  const len = display.length
+  const fontSize = len > 14 ? 'text-xl' : len > 10 ? 'text-2xl' : len > 7 ? 'text-3xl' : 'text-5xl'
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 shadow-inner border border-white/5">
-      {/* Expression history */}
-      <div className="min-h-[2rem] text-right pr-1">
-        {expression && (
+    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950 to-zinc-900 p-5 sm:p-6 shadow-inner border border-white/5">
+      {/* Expression / preview line */}
+      <div className="min-h-[1.75rem] text-right pr-1 flex items-center justify-end">
+        {showPreview && (
           <motion.p
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-muted-foreground text-sm font-mono truncate"
+            key={previewExpr}
+            initial={{ opacity: 0.6 }}
+            animate={{ opacity: 1 }}
+            className="text-zinc-500 text-sm font-mono truncate max-w-full"
           >
-            {expression}
+            {previewExpr}
           </motion.p>
         )}
       </div>
-      {/* Current display */}
-      <div className="flex items-end justify-end mt-2">
+      {/* Current value / result */}
+      <div className="flex items-end justify-end mt-1 min-h-[3.5rem]">
         <motion.span
           key={display}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.15 }}
-          className={`font-mono font-bold tabular-nums tracking-tight ${fontSize} ${
-            display === 'Error' ? 'text-red-400' : 'text-white'
+          initial={{ opacity: 0, y: display === 'Error' ? 0 : 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.12, ease: 'easeOut' }}
+          className={`font-mono font-bold tabular-nums tracking-tight leading-tight ${fontSize} ${
+            display === 'Error'
+              ? 'text-red-400'
+              : hasResult
+                ? 'text-emerald-400'
+                : 'text-white'
           }`}
         >
           {hasResult && display !== 'Error' && (
-            <span className="text-muted-foreground text-lg mr-1">=</span>
+            <span className="text-zinc-500 text-base mr-1.5 font-normal">=</span>
           )}
           {display}
         </motion.span>
