@@ -8,7 +8,7 @@ import { ReferenceTablesPanel } from './reference-tables'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calculator, History, Atom, Zap, Keyboard, TableProperties } from 'lucide-react'
+import { Calculator, History, Atom, Zap, Keyboard, TableProperties, Github } from 'lucide-react'
 import { useEffect, useCallback } from 'react'
 import { type HistoryItem } from '@/stores/calculator-store'
 
@@ -218,6 +218,16 @@ export function CalculatorApp() {
                   <ReferenceTablesPanel />
                 </SheetContent>
               </Sheet>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/70 text-zinc-400 hover:text-zinc-200 text-sm transition-all border border-white/[0.06] cursor-pointer"
+                aria-label="Open GitHub"
+              >
+                <Github className="w-4 h-4" />
+                <span className="hidden sm:inline">GitHub</span>
+              </a>
               <Sheet>
                 <SheetTrigger asChild>
                   <button className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/70 text-zinc-400 hover:text-zinc-200 text-sm transition-all border border-white/[0.06] cursor-pointer" aria-label="Open history">
