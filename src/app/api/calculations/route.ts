@@ -18,14 +18,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { expression, result, mode } = body
+    const { expression, result, exactForm, mode } = body
 
     if (!expression || !result) {
       return NextResponse.json({ error: 'Expression and result are required' }, { status: 400 })
     }
 
     const calculation = await db.calculation.create({
-      data: { expression, result, mode: mode || 'basic' },
+      data: { expression, result, exactForm: exactForm || null, mode: mode || 'basic' },
     })
 
     return NextResponse.json(calculation, { status: 201 })

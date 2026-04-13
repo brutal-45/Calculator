@@ -97,3 +97,43 @@ Stage Summary:
 - 4 comprehensive reference tables with perfectly aligned tabular numbers
 - Tables accessible via mobile Sheets and desktop bottom panel
 - Tabular number formatting enforced globally across all displays
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Better logo, exact value engine, enhanced history/tables, README
+
+Work Log:
+- Rewrote BrutalTools SVG logo with detailed multi-layer design: emerald gradient bg, BT monogram watermark, golden lightning bolt with inner highlight + edge + glow filter, sparkle dots, top shine, subtle grid and circle patterns, inner border, shadow
+- Built `exact-values.ts` engine with 5-layer matching:
+  1. Expression parsing (detects trig, sqrt, factorial, inverse trig)
+  2. Known angle lookup table (0°, 15°, 30°, 45°, 60°, 75°, 90° + multiples)
+  3. Simple fraction detection (denominators 2-12)
+  4. Known constant matching (π, e, √2, √3, √5, φ)
+  5. Radical simplification (detects n√k and √k/n patterns)
+- Updated store with `exactDisplay` state field, integrates exact form lookup on both `calculate()` and `scientificFunction()`
+- Updated display to show exact form (amber) above decimal (emerald) with hover-reveal copy button
+- Enhanced history panel:
+  - Relative timestamps (just now, 5m ago, 2h ago, yesterday)
+  - Mode badges (BAS/SCI) with color coding
+  - Exact form shown as amber badge on each entry
+  - Per-item copy button with check feedback
+  - Clean button with hover highlight
+  - Clock icon in emerald, count badge in emerald
+- Enhanced reference tables from 4 to 5 tabs:
+  - Trig: now shows BOTH decimal AND exact form columns
+  - Log: expanded to 17 values with n² and √n columns
+  - Constants: expanded to 12 with description column
+  - Powers: expanded to n=20
+  - NEW Conversions: Degrees↔Radians, Temperature (°C/°F/K), Common Fractions
+- Updated Prisma schema with `exactForm` field
+- Updated API route to accept and store `exactForm`
+- Created comprehensive README.md with: badges, feature table, exact value examples, tech stack table, project structure, exact values engine explanation, setup instructions
+- All lint checks pass
+
+Stage Summary:
+- Multi-layered SVG logo with BT monogram, gradient bolt, glow effects
+- sin(30°)=1/2 exact value recognition with 5-layer matching engine
+- History shows timestamps, mode badges, exact forms, per-item copy
+- 5 reference table tabs including new Conversions section
+- Professional README.md ready for GitHub

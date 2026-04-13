@@ -32,9 +32,10 @@ model Post {
 }
 
 model Calculation {
-  id        String   @id @default(cuid())
+  id         String    @id @default(cuid())
   expression String
   result     String
-  mode       String   @default("basic")
-  createdAt DateTime @default(now())
+  exactForm  String?
+  mode       String    @default("basic")
+  createdAt  DateTime  @default(now())
 }
