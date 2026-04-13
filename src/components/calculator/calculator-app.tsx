@@ -213,7 +213,7 @@ export function CalculatorApp() {
                     <span className="hidden sm:inline">Tables</span>
                   </button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[340px] sm:w-[440px] bg-zinc-900 border-white/[0.06] p-0">
+                <SheetContent side="right" className="w-full sm:w-[400px] bg-zinc-900 border-white/[0.06] p-0">
                   <SheetTitle className="sr-only">Reference Tables</SheetTitle>
                   <ReferenceTablesPanel />
                 </SheetContent>

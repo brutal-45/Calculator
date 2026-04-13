@@ -37,88 +37,98 @@ const exactTrig: Record<number, { sin: string; cos: string; tan: string }> = {
   360: { sin: '0',    cos: '1',     tan: '0' },
 }
 
-/* ───── table styles ───── */
-const thCls = 'text-[10px] font-bold text-emerald-400 uppercase tracking-wider px-2.5 py-2 text-left whitespace-nowrap'
-const tdCls = 'text-xs font-mono text-zinc-300 px-2.5 py-2 whitespace-nowrap tabular-nums'
-const tdExact = 'text-xs font-mono text-amber-400 px-2.5 py-2 whitespace-nowrap font-semibold tabular-nums'
-const tdAngle = 'text-xs font-mono text-emerald-400 px-2.5 py-2 whitespace-nowrap font-bold tabular-nums'
-const rowCls = 'border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors'
-
-/* ═════════════ TRIG TABLE ═════════════ */
+/* ═════════════ TRIG TABLE (card-based for mobile) ═════════════ */
 function TrigTable() {
   const angles = [0, 15, 30, 45, 60, 75, 90, 120, 135, 150, 180, 270, 330, 360]
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[580px]">
-        <thead>
-          <tr className="border-b border-emerald-500/20">
-            <th className={thCls}>Angle</th>
-            <th className={thCls}>Rad</th>
-            <th className={thCls}>sin</th>
-            <th className={thCls}>cos</th>
-            <th className={thCls}>tan</th>
-            <th className={thCls}>Exact sin</th>
-            <th className={thCls}>Exact cos</th>
-            <th className={thCls}>Exact tan</th>
-          </tr>
-        </thead>
-        <tbody>
-          {angles.map(deg => {
-            const rad = deg * DEG_TO_RAD
-            const e = exactTrig[deg]
-            return (
-              <tr key={deg} className={rowCls}>
-                <td className={tdAngle}>{deg}°</td>
-                <td className={tdCls}>{fmt(rad, 4)}</td>
-                <td className={tdCls}>{fmt(Math.sin(rad))}</td>
-                <td className={tdCls}>{fmt(Math.cos(rad))}</td>
-                <td className={tdCls}>{Math.abs(Math.cos(rad)) < 1e-10 ? '∞' : fmt(Math.tan(rad))}</td>
-                <td className={tdExact}>{e?.sin ?? '—'}</td>
-                <td className={tdExact}>{e?.cos ?? '—'}</td>
-                <td className={tdExact}>{e?.tan ?? '—'}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+    <div className="space-y-1.5">
+      {angles.map(deg => {
+        const rad = deg * DEG_TO_RAD
+        const e = exactTrig[deg]
+        return (
+          <motion.div
+            key={deg}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-3"
+          >
+            {/* angle header */}
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-bold text-emerald-400 tabular-nums">{deg}°</span>
+              <span className="text-[11px] font-mono text-zinc-500 tabular-nums">{fmt(rad, 4)} rad</span>
+            </div>
+
+            {/* sin / cos / tan rows */}
+            <div className="space-y-1.5">
+              {(['sin', 'cos', 'tan'] as const).map(fn => {
+                const exact = e?.[fn]
+                const decimal = fn === 'tan' && Math.abs(Math.cos(rad)) < 1e-10
+                  ? '∞'
+                  : fmt(fn === 'sin' ? Math.sin(rad) : fn === 'cos' ? Math.cos(rad) : Math.tan(rad))
+                return (
+                  <div key={fn} className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-semibold text-zinc-500 w-6">{fn}</span>
+                    <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+                      <span className="text-xs font-mono text-zinc-300 tabular-nums truncate">{decimal}</span>
+                      {exact && exact !== decimal && (
+                        <>
+                          <span className="text-zinc-600 text-[10px]">→</span>
+                          <span className="text-xs font-mono text-amber-400 font-semibold tabular-nums truncate">
+                            {exact}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </motion.div>
+        )
+      })}
     </div>
   )
 }
 
-/* ═════════════ LOG TABLE ═════════════ */
+/* ═════════════ LOG TABLE (card-based) ═════════════ */
 function LogTable() {
   const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 100, 200, 500, 1000]
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[400px]">
-        <thead>
-          <tr className="border-b border-emerald-500/20">
-            <th className={thCls}>n</th>
-            <th className={thCls}>log₁₀(n)</th>
-            <th className={thCls}>ln(n)</th>
-            <th className={thCls}>log₂(n)</th>
-            <th className={thCls}>n²</th>
-            <th className={thCls}>√n</th>
-          </tr>
-        </thead>
-        <tbody>
-          {values.map(n => (
-            <tr key={n} className={rowCls}>
-              <td className={tdAngle}>{n}</td>
-              <td className={tdCls}>{fmt(Math.log10(n))}</td>
-              <td className={tdCls}>{fmt(Math.log(n))}</td>
-              <td className={tdCls}>{fmt(Math.log2(n))}</td>
-              <td className={tdCls}>{(n * n).toLocaleString()}</td>
-              <td className={tdCls}>{n === 1 ? '1' : fmt(Math.sqrt(n))}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+      {values.map(n => (
+        <div key={n} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-2.5">
+          <span className="text-sm font-bold text-emerald-400 tabular-nums">{n}</span>
+          <div className="mt-1.5 space-y-0.5">
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">log₁₀</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(Math.log10(n))}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">ln</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(Math.log(n))}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">log₂</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(Math.log2(n))}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">n²</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{(n * n).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">√n</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{n === 1 ? '1' : fmt(Math.sqrt(n))}</span>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
 
-/* ═════════════ CONSTANTS TABLE ═════════════ */
+/* ═════════════ CONSTANTS TABLE (card list) ═════════════ */
 function ConstantsTable() {
   const data = [
     { name: 'π (Pi)', value: fmt(Math.PI, 10), desc: 'Circle circumference / diameter' },
@@ -134,31 +144,28 @@ function ConstantsTable() {
     { name: 'π²', value: fmt(Math.PI * Math.PI, 10), desc: 'Pi squared' },
     { name: 'e²', value: fmt(Math.E * Math.E, 10), desc: 'Euler squared' },
   ]
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[360px]">
-        <thead>
-          <tr className="border-b border-emerald-500/20">
-            <th className={thCls}>Constant</th>
-            <th className={thCls}>Value</th>
-            <th className={thCls}>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map(r => (
-            <tr key={r.name} className={rowCls}>
-              <td className="text-xs font-bold text-white px-2.5 py-2 whitespace-nowrap">{r.name}</td>
-              <td className={tdCls}>{r.value}</td>
-              <td className="text-[11px] text-zinc-500 px-2.5 py-2 whitespace-nowrap">{r.desc}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-1.5">
+      {data.map(r => (
+        <div key={r.name} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-bold text-white whitespace-nowrap">{r.name}</span>
+            <button
+              onClick={() => navigator.clipboard.writeText(r.value).catch(() => {})}
+              className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer truncate"
+            >
+              {r.value}
+            </button>
+          </div>
+          <p className="text-[10px] text-zinc-500 mt-0.5">{r.desc}</p>
+        </div>
+      ))}
     </div>
   )
 }
 
-/* ═════════════ POWERS TABLE ═════════════ */
+/* ═════════════ POWERS TABLE (compact grid) ═════════════ */
 function PowersTable() {
   const rows: { n: number; square: number; cube: number; sqrt: string; cbrt: string; fact: string }[] = []
   for (let n = 1; n <= 20; n++) {
@@ -171,37 +178,41 @@ function PowersTable() {
       fact: f.toLocaleString(),
     })
   }
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[520px]">
-        <thead>
-          <tr className="border-b border-emerald-500/20">
-            <th className={thCls}>n</th>
-            <th className={thCls}>n²</th>
-            <th className={thCls}>n³</th>
-            <th className={thCls}>√n</th>
-            <th className={thCls}>∛n</th>
-            <th className={thCls}>n!</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(r => (
-            <tr key={r.n} className={rowCls}>
-              <td className={tdAngle}>{r.n}</td>
-              <td className={tdCls}>{r.square.toLocaleString()}</td>
-              <td className={tdCls}>{r.cube.toLocaleString()}</td>
-              <td className={tdCls}>{r.sqrt}</td>
-              <td className={tdCls}>{r.cbrt}</td>
-              <td className={tdCls}>{r.fact}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+      {rows.map(r => (
+        <div key={r.n} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-2.5">
+          <span className="text-sm font-bold text-emerald-400 tabular-nums">n = {r.n}</span>
+          <div className="mt-1.5 space-y-0.5">
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">n²</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{r.square.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">n³</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{r.cube.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">√n</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{r.sqrt}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">∛n</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{r.cbrt}</span>
+            </div>
+            <div className="flex justify-between gap-1.5">
+              <span className="text-[10px] text-zinc-500">n!</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{r.fact}</span>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
 
-/* ═════════════ CONVERSIONS TABLE ═════════════ */
+/* ═════════════ CONVERSIONS TABLE (card sections) ═════════════ */
 function ConvertTable() {
   const degRows = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270, 360]
   const tempRows = [
@@ -219,81 +230,54 @@ function ConvertTable() {
 
   return (
     <div className="space-y-4">
-      {/* Degree → Radian */}
+      {/* Degrees ↔ Radians */}
       <div>
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Degrees ↔ Radians</p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[280px]">
-            <thead>
-              <tr className="border-b border-emerald-500/20">
-                <th className={thCls}>Degrees</th>
-                <th className={thCls}>Radians</th>
-              </tr>
-            </thead>
-            <tbody>
-              {degRows.map(d => (
-                <tr key={d} className={rowCls}>
-                  <td className={tdAngle}>{d}°</td>
-                  <td className={tdCls}>{fmt(d * DEG_TO_RAD, 6)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-2 gap-1.5">
+          {degRows.map(d => (
+            <div key={d} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2 flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-400 tabular-nums">{d}°</span>
+              <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(d * DEG_TO_RAD, 6)}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Temperature */}
       <div>
-        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Temperature Conversions</p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[380px]">
-            <thead>
-              <tr className="border-b border-emerald-500/20">
-                <th className={thCls}>°C</th>
-                <th className={thCls}>°F</th>
-                <th className={thCls}>K</th>
-                <th className={thCls}>Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tempRows.map(r => (
-                <tr key={r.c} className={rowCls}>
-                  <td className={tdAngle}>{r.c}°</td>
-                  <td className={tdCls}>{fmt(cToF(r.c), 1)}°</td>
-                  <td className={tdCls}>{fmt(cToK(r.c), 1)}</td>
-                  <td className="text-[11px] text-zinc-500 px-2.5 py-2">{r.desc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Temperature</p>
+        <div className="space-y-1.5">
+          {tempRows.map(r => (
+            <div key={r.c} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2.5">
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="text-xs font-bold text-white tabular-nums">{r.c}°C</span>
+                <span className="text-[10px] text-zinc-500">{r.desc}</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-[11px] font-mono text-zinc-400 tabular-nums">{fmt(cToF(r.c), 1)}°F</span>
+                <span className="text-[11px] font-mono text-zinc-400 tabular-nums">{fmt(cToK(r.c), 1)} K</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Common fractions */}
       <div>
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Common Fractions</p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[240px]">
-            <thead>
-              <tr className="border-b border-emerald-500/20">
-                <th className={thCls}>Fraction</th>
-                <th className={thCls}>Decimal</th>
-                <th className={thCls}>%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['1/2', 0.5], ['1/3', 1/3], ['2/3', 2/3], ['1/4', 0.25], ['3/4', 0.75],
-                ['1/5', 0.2], ['1/6', 1/6], ['1/8', 0.125], ['1/10', 0.1], ['1/12', 1/12],
-              ].map(([frac, dec]) => (
-                <tr key={frac as string} className={rowCls}>
-                  <td className={tdExact}>{frac as string}</td>
-                  <td className={tdCls}>{fmt(dec as number)}</td>
-                  <td className={tdCls}>{fmt((dec as number) * 100, 1)}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-3 gap-1.5">
+          {[
+            ['1/2', 0.5], ['1/3', 1 / 3], ['2/3', 2 / 3], ['1/4', 0.25], ['3/4', 0.75],
+            ['1/5', 0.2], ['1/6', 1 / 6], ['1/8', 0.125], ['1/10', 0.1], ['1/12', 1 / 12],
+          ].map(([frac, dec]) => (
+            <div key={frac as string} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-2.5 py-2 text-center">
+              <span className="text-xs font-mono font-semibold text-amber-400 tabular-nums">{frac as string}</span>
+              <div className="mt-1">
+                <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(dec as number)}</span>
+              </div>
+              <span className="text-[10px] text-zinc-500 tabular-nums">{fmt((dec as number) * 100, 1)}%</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -303,26 +287,42 @@ function ConvertTable() {
 /* ════════════════════════════════════════
    MAIN EXPORT
    ════════════════════════════════════════ */
+const tabs: { value: TableTab; label: string }[] = [
+  { value: 'trig', label: 'Trig' },
+  { value: 'log', label: 'Log' },
+  { value: 'constants', label: 'Const' },
+  { value: 'powers', label: 'Powers' },
+  { value: 'convert', label: 'Conv' },
+]
+
 export function ReferenceTablesPanel() {
   const [tab, setTab] = useState<TableTab>('trig')
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 pt-3 pb-0 flex-shrink-0">
-        <h3 className="text-sm font-bold text-white mb-2.5">Reference Tables</h3>
-        <Tabs value={tab} onValueChange={(v) => setTab(v as TableTab)} className="w-full">
-          <TabsList className="w-full h-8 bg-zinc-800/60 rounded-lg p-0.5 border border-white/[0.04]">
-            <TabsTrigger value="trig" className="flex-1 text-[10px] rounded-md h-7 data-[state=active]:bg-zinc-700 data-[state=active]:text-white">Trig</TabsTrigger>
-            <TabsTrigger value="log" className="flex-1 text-[10px] rounded-md h-7 data-[state=active]:bg-zinc-700 data-[state=active]:text-white">Log</TabsTrigger>
-            <TabsTrigger value="constants" className="flex-1 text-[10px] rounded-md h-7 data-[state=active]:bg-zinc-700 data-[state=active]:text-white">Const</TabsTrigger>
-            <TabsTrigger value="powers" className="flex-1 text-[10px] rounded-md h-7 data-[state=active]:bg-zinc-700 data-[state=active]:text-white">Powers</TabsTrigger>
-            <TabsTrigger value="convert" className="flex-1 text-[10px] rounded-md h-7 data-[state=active]:bg-zinc-700 data-[state=active]:text-white">Conv</TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <div className="px-4 pt-4 pb-0 flex-shrink-0">
+        <h3 className="text-sm font-bold text-white mb-3">Reference Tables</h3>
+
+        {/* scrollable tabs for mobile */}
+        <div className="overflow-x-auto -mx-4 px-4 scrollbar-none">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as TableTab)} className="w-full">
+            <TabsList className="w-full h-9 bg-zinc-800/60 rounded-lg p-0.5 border border-white/[0.04] min-w-max">
+              {tabs.map(t => (
+                <TabsTrigger
+                  key={t.value}
+                  value={t.value}
+                  className="px-3.5 text-[11px] rounded-md h-8 data-[state=active]:bg-zinc-700 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all whitespace-nowrap"
+                >
+                  {t.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
 
-      <ScrollArea className="flex-1 mt-2">
-        <div className="px-4 pb-4">
+      <ScrollArea className="flex-1 mt-3">
+        <div className="px-4 pb-6">
           <motion.div key={tab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
             {tab === 'trig' && <TrigTable />}
             {tab === 'log' && <LogTable />}
