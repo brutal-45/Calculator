@@ -67,3 +67,33 @@ Stage Summary:
 - `/` key divides numbers from keyboard
 - Polished UI with gradients, spring animations, live expression preview
 - BrutalTools branding in header and sticky footer
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Create BrutalTools logo, add reference tables with tabular values, improve number display
+
+Work Log:
+- Created custom BrutalTools SVG logo (`public/brutaltools-logo.svg`) with emerald gradient, golden lightning bolt, grid pattern, and shine effect
+- Built `BrutalToolsLogo` React component with inline SVG bolt, gradient background, grid overlay, and decorative corner dot
+- Created comprehensive `ReferenceTablesPanel` component with 4 tabs:
+  - **Trig Table**: 14 angles (0°–360°) with sin, cos, tan, cosec, sec, cot values in tabular-nums format
+  - **Log Table**: log₁₀, ln, log₂ for 16 common values (1–1000)
+  - **Constants Table**: π, e, √2, √3, φ (golden ratio), √π, ln(2), ln(10), log₁₀(2), 1/π with 10-digit precision
+  - **Powers Table**: n², n³, √n, ∛n, n! for numbers 1–15
+- All table numbers use `font-variant-numeric: tabular-nums` for perfect column alignment
+- Table headers styled with emerald accent, values in monospace, angle/input column in amber highlight
+- Added global CSS rule ensuring `.font-mono` and `.tabular-nums` always use tabular-nums variant
+- Calculator display uses explicit `style={{ fontVariantNumeric: 'tabular-nums' }}` for guaranteed alignment
+- Updated calculator app layout:
+  - Logo replaced with custom BrutalTools component (also in footer)
+  - "by BrutalTools" text uses gradient color (emerald→amber)
+  - Mobile: "Tables" button opens right-side Sheet, "History" button opens left-side Sheet
+  - Desktop: Bottom panel with tabbed interface switching between Reference Tables and History
+- All lint checks pass, all compilations successful
+
+Stage Summary:
+- Professional BrutalTools lightning-bolt logo with emerald/amber branding
+- 4 comprehensive reference tables with perfectly aligned tabular numbers
+- Tables accessible via mobile Sheets and desktop bottom panel
+- Tabular number formatting enforced globally across all displays

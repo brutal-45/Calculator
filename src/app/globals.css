@@ -120,3 +120,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Ensure all numbers use tabular (monospace-width) figures for alignment */
+.font-mono,
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
