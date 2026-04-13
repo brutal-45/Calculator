@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calculator, History, Atom, Zap, Keyboard, TableProperties } from 'lucide-react'
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback } from 'react'
 import { type HistoryItem } from '@/stores/calculator-store'
 
 /* ────── BrutalTools Logo ────── */
@@ -39,16 +39,12 @@ function BrutalToolsLogo({ size = 36 }: { size?: number }) {
   )
 }
 
-type DesktopPanel = 'tables' | 'history'
-
 export function CalculatorApp() {
   const {
     mode, setMode, setHistory,
     percentage, appendOperator, appendDigit, appendDecimal,
     calculate, clear, clearEntry, backspace, appendParenthesis,
   } = useCalculatorStore()
-  const [desktopPanel, setDesktopPanel] = useState<DesktopPanel>('tables')
-
   useEffect(() => {
     fetch('/api/calculations')
       .then(res => res.json())
@@ -165,27 +161,11 @@ export function CalculatorApp() {
             </div>
           </motion.div>
 
-          {/* desktop bottom panel */}
+          {/* desktop bottom panel — history only */}
           <div className="hidden lg:block mt-4">
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.15 }}
-              className="rounded-2xl bg-zinc-900/70 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-black/40 overflow-hidden">
-              <div className="flex items-center border-b border-white/[0.06] px-3 pt-2">
-                {(['tables', 'history'] as const).map(p => (
-                  <button key={p} onClick={() => setDesktopPanel(p)}
-                    className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-all cursor-pointer ${
-                      desktopPanel === p ? 'text-emerald-400 bg-white/[0.03] border-b-2 border-emerald-400 -mb-px' : 'text-zinc-500 hover:text-zinc-300'
-                    }`}>
-                    {p === 'tables' ? <TableProperties className="w-3.5 h-3.5" /> : <History className="w-3.5 h-3.5" />}
-                    {p === 'tables' ? 'Reference Tables' : 'History'}
-                  </button>
-                ))}
-              </div>
-              <AnimatePresence mode="wait">
-                <motion.div key={desktopPanel} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}
-                  className={desktopPanel === 'tables' ? 'max-h-96' : 'max-h-72'}>
-                  {desktopPanel === 'tables' ? <ReferenceTablesPanel /> : <HistoryPanel />}
-                </motion.div>
-              </AnimatePresence>
+              className="rounded-2xl bg-zinc-900/70 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-black/40 overflow-hidden max-h-72">
+              <HistoryPanel />
             </motion.div>
           </div>
         </div>
