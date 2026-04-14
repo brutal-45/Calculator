@@ -12,7 +12,7 @@ export interface HistoryItem {
   mode: CalculatorMode
   createdAt?: string
 }
-
+ 
 interface CalculatorState {
   display: string
   exactDisplay: string | null   // e.g. "1/2" shown alongside decimal
