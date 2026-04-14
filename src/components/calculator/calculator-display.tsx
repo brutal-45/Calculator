@@ -8,7 +8,7 @@ import { useState } from 'react'
 export function CalculatorDisplay() {
   const { display, exactDisplay, expression, hasResult, parenthesesCount } = useCalculatorStore()
   const [copied, setCopied] = useState(false)
-
+ 
   // Live expression preview
   let previewExpr = expression
   if (!hasResult && display !== '0') previewExpr = expression + display
