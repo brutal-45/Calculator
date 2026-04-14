@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check } from 'lucide-react' 
 import { AnimatePresence } from 'framer-motion'
 
 type TableTab = 'trig' | 'log' | 'constants' | 'powers' | 'convert'
