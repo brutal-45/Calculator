@@ -266,10 +266,10 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
 
   insertConstant: (constant: string) => {
     const { display, hasResult } = get()
-    const value = constant === 'π' ? Math.PI.toString() : Math.E.toString()
-    if (hasResult) { set({ display: value, exactDisplay: constant === 'π' ? 'π' : 'e', expression: '', hasResult: false, parenthesesCount: 0, showAC: false }); return }
-    if (display === '0') { set({ display: value, exactDisplay: constant === 'π' ? 'π' : 'e', showAC: false }) }
-    else { set({ expression: display + ' × ', display: constant === 'π' ? 'π' : 'e', hasResult: false }) }
+    const symbol = constant === 'π' ? 'π' : 'e'
+    if (hasResult) { set({ display: symbol, exactDisplay: symbol, expression: '', hasResult: false, parenthesesCount: 0, showAC: false }); return }
+    if (display === '0') { set({ display: symbol, exactDisplay: symbol, showAC: false }) }
+    else { set({ expression: display + ' × ', display: symbol, hasResult: false }) }
   },
 
   setMode: (mode: CalculatorMode) => set({ mode }),
