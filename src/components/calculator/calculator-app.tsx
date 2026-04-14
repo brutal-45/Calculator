@@ -4,7 +4,7 @@ import { useCalculatorStore, type CalculatorMode } from '@/stores/calculator-sto
 import { CalculatorDisplay } from './calculator-display'
 import { BasicCalculator, ScientificCalculator } from './calculator-keyboard'
 import { HistoryPanel } from './history-panel'
-import { ReferenceTablesPanel } from './reference-tables'
+import { ReferenceTablesPanel } from './reference-tables' 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
