@@ -71,6 +71,16 @@ function gamma(z: number): number {
 function toAngle(v: number, u: AngleUnit) { return u === 'deg' ? (v * Math.PI) / 180 : v }
 function fromAngle(v: number, u: AngleUnit) { return u === 'deg' ? (v * 180) / Math.PI : v }
 
+function isConstantSymbol(d: string): boolean {
+  return d === 'e' || d === 'π' || d === '-e' || d === '-π'
+}
+
+function constantValue(d: string): number {
+  if (d === 'e' || d === '-e') return d === 'e' ? Math.E : -Math.E
+  if (d === 'π' || d === '-π') return d === 'π' ? Math.PI : -Math.PI
+  return NaN
+}
+
 function formatResult(num: number): string {
   if (isNaN(num)) return 'Error'
   if (!isFinite(num)) return num > 0 ? 'Infinity' : '-Infinity'
@@ -127,7 +137,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
 
   appendDigit: (digit: string) => {
     const { display, hasResult } = get()
-    if (hasResult) {
+    if (hasResult || isConstantSymbol(display)) {
       set({ display: digit, exactDisplay: null, expression: '', hasResult: false, parenthesesCount: 0, showAC: false })
       return
     }
@@ -149,7 +159,7 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
 
   appendDecimal: () => {
     const { display, hasResult } = get()
-    if (hasResult) { set({ display: '0.', exactDisplay: null, expression: '', hasResult: false, showAC: false }); return }
+    if (hasResult || isConstantSymbol(display)) { set({ display: '0.', exactDisplay: null, expression: '', hasResult: false, showAC: false }); return }
     if (!display.includes('.')) { set({ display: display + '.', showAC: false }) }
   },
 
@@ -180,7 +190,8 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
   },
 
   calculate: () => {
-    const { display, expression, angleUnit, mode, parenthesesCount } = get()
+    const { display, expression, angleUnit, mode, parenthesesCount, hasResult } = get()
+    if (hasResult) return
     let fullExpr = expression + display
     for (let i = 0; i < parenthesesCount; i++) fullExpr += ')'
     if (!fullExpr || fullExpr.trim() === '' || fullExpr.trim() === '0') return
@@ -218,7 +229,10 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
   scientificFunction: (fn: string) => {
     const { display, angleUnit } = get()
     let value = parseFloat(display)
-    if (isNaN(value) && display !== 'Error') return
+    if (isNaN(value) && display !== 'Error') {
+      if (isConstantSymbol(display)) value = constantValue(display)
+      else return
+    }
 
     let result: number
     let newExpr: string

@@ -5,7 +5,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-> A beautiful, feature-rich scientific calculator web app with smooth animations, persistent history, and reference tables -- built with modern web technologies.
+> A beautiful, feature-rich scientific calculator web app with smooth animations, persistent history, and reference tables — built with modern web technologies.
 
 ---
 
@@ -21,11 +21,11 @@ Developed under **BrutalTools**.
 
 | Basic Mode | Scientific Mode |
 |:---:|:---:|
-| *[Screenshot placeholder -- basic calculator view]* | *[Screenshot placeholder -- scientific calculator view]* |
+| *[Screenshot placeholder — basic calculator view]* | *[Screenshot placeholder — scientific calculator view]* |
 
 | Calculation History | Reference Tables |
 |:---:|:---:|
-| *[Screenshot placeholder -- history panel]* | *[Screenshot placeholder -- reference table sheet]* |
+| *[Screenshot placeholder — history panel]* | *[Screenshot placeholder — reference table sheet]* |
 
 ---
 
@@ -37,36 +37,45 @@ Developed under **BrutalTools**.
 |:-:|---------|-------------|
 | 1 | Basic & Scientific Modes | Toggle seamlessly between a streamlined basic pad and a full scientific layout with animated transitions |
 | 2 | Live Expression Preview | See your expression rendered in real time as you type |
-| 3 | Exact Form Detection | Results like `sin(30 deg)` are returned as `1/2` rather than decimal approximations; supports `sqrt(2)/2`, `sqrt(3)`, and more |
+| 3 | Exact Form Detection | Results like `sin(30°)` are returned as `1/2` rather than decimal approximations; supports `√2/2`, `√3`, `(√6−√2)/4`, and more |
 | 4 | Full Keyboard Support | Type numbers, operators, and functions directly from your keyboard (see [Keyboard Shortcuts](#keyboard-shortcuts)) |
 | 5 | Smart AC / CE Toggle | `AC` clears everything; after the first input it becomes `CE` to clear just the current entry |
-| 6 | DEG / RAD Toggle | Switch angle units instantly; all trig functions respect the selected mode |
-| 7 | Parentheses | Auto-nested parentheses with visual depth tracking |
-| 8 | Copy to Clipboard | One-click copy of the displayed result |
+| 6 | DEG / RAD Toggle | Switch angle units instantly; all trig functions and exact form detection respect the selected mode |
+| 7 | Parentheses | Auto-nested parentheses with visual depth tracking via a live counter badge |
+| 8 | Copy to Clipboard | One-click copy of the displayed result (both exact and decimal forms) |
+| 9 | Constants | Quick-insert mathematical constants `π` and `e` with proper symbolic display |
+| 10 | Scientific Functions | sin, cos, tan (and inverses), log, ln, x², x³, √x, ∛x, x!, eˣ, 10ˣ, 1/x, and |x| |
 
 ### Reference Tables
 
-Five tabbed reference sheets accessible from the scientific pad:
+Five tabbed reference sheets accessible via the **Tables** button:
 
 | Tab | Contents |
 |-----|----------|
-| Trigonometry | Common sin, cos, tan values; identities |
-| Logarithms | log, ln, and exponential reference |
-| Constants | Mathematical and physical constants |
-| Powers | Squares, cubes, and nth powers |
-| Conversions | Unit conversion quick-reference |
+| Trig | Common sin, cos, tan values for 14 angles (0°–360°) with exact forms highlighted in amber |
+| Log | log₁₀, ln, log₂, n², and √n for 17 common values |
+| Const | 12 mathematical constants (π, e, √2, φ, etc.) with copy-to-clipboard values |
+| Powers | n², n³, √n, ∛n, and n! for n = 1 to 20 |
+| Conv | Degrees ↔ radians, temperature conversions (°C / °F / K), and common fractions with percentages |
 
 ### History & Persistence
 
-Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so your history survives page reloads and browser restarts. Scroll through past expressions and results, and clear history at any time.
+Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so your history survives page reloads and browser restarts. Features include:
+
+- Scrollable history panel with expression, result, exact form badges, and mode indicator
+- Search through past calculations
+- One-click copy of any history entry
+- Double-confirm clear button to prevent accidental deletion
+- Up to 50 most recent calculations stored
 
 ### Design
 
 - **Dark theme** with emerald and amber accent palette
-- **Glassmorphism** card effects throughout the UI
-- **Framer Motion** animations for mode transitions, button presses, and sheet slides
-- **Fully responsive** -- optimized for desktop and mobile viewports
-- Card-based mobile layouts presented in bottom sheets for comfortable thumb reach
+- **Glassmorphism** card effects with backdrop blur throughout the UI
+- **Framer Motion** animations for mode transitions, button presses, sheet slides, and result reveals
+- **Fully responsive** — optimized for desktop and mobile viewports
+- Card-based mobile layouts presented in full-width sheets for comfortable thumb reach
+- Custom BrutalTools logo with lightning bolt and gradient glow
 
 ---
 
@@ -74,7 +83,7 @@ Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so
 
 | Key | Action |
 |-----|--------|
-| `0` -- `9` | Enter digit |
+| `0` — `9` | Enter digit |
 | `.` | Decimal point |
 | `+` | Add |
 | `-` | Subtract |
@@ -82,10 +91,10 @@ Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so
 | `/` | Divide |
 | `Enter` or `=` | Evaluate expression |
 | `Escape` | Clear all (AC) |
+| `Delete` | Clear entry (CE) |
 | `Backspace` | Delete last character |
 | `(` `)` | Open / close parentheses |
 | `%` | Percent |
-| `^` | Power |
 
 ---
 
@@ -95,9 +104,10 @@ Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so
 |----------|-----------|---------|
 | Framework | **Next.js 16** (App Router) | React framework with server components and file-based routing |
 | Language | **TypeScript 5** | Static type checking across the entire codebase |
+| Runtime | **Bun** | Fast JavaScript runtime and package manager |
 | Styling | **Tailwind CSS 4** | Utility-first CSS with JIT engine |
-| Components | **shadcn/ui** (Radix UI) | Accessible, composable UI primitives |
-| State | **Zustand** | Lightweight global state management |
+| Components | **shadcn/ui** (Radix UI) | Accessible, composable UI primitives (Sheet, Tabs, ScrollArea) |
+| State | **Zustand** | Lightweight global state management for calculator logic |
 | Database | **Prisma ORM** + **SQLite** | Typed database access with zero-config local storage |
 | Animation | **Framer Motion** | Declarative spring and gesture animations |
 | Icons | **Lucide React** | Consistent, tree-shakeable icon set |
@@ -108,44 +118,40 @@ Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so
 
 ```
 calculator/
-|-- app/
-|   |-- layout.tsx              # Root layout (theme, fonts, providers)
-|   |-- page.tsx                # Home page -- calculator
-|   |-- api/
-|       |-- history/
-|           |-- route.ts        # GET / POST calculation history
-|   |-- globals.css             # Tailwind directives + custom tokens
-|
-|-- components/
-|   |-- calculator/
-|   |   |-- display.tsx         # Expression preview + result readout
-|   |   |-- button-grid.tsx     # Basic & scientific button layouts
-|   |   |-- keypad-button.tsx   # Individual button with press animation
-|   |   |-- history-panel.tsx   # Scrollable calculation history
-|   |   |-- ref-tables.tsx      # Tabbed reference tables sheet
-|   |   |-- angle-toggle.tsx    # DEG / RAD switch
-|   |   `-- copy-button.tsx     # Copy-to-clipboard action
-|   |-- ui/                     # shadcn/ui primitives
-|   |-- header.tsx              # App bar with logo + GitHub link
-|   `-- footer.tsx              # "Developed under BrutalTools"
-|
-|-- lib/
-|   |-- store.ts                # Zustand store (expression, history, mode)
-|   |-- evaluator.ts            # Expression parser + exact-form detection
-|   `-- utils.ts                # cn() helper and shared utilities
-|
-|-- prisma/
-|   |-- schema.prisma           # History model definition
-|   `-- dev.db                  # SQLite database file (gitignored)
-|
-|-- public/
-|   `-- logo.svg                # BrutalTools lightning-bolt logo
-|
-|-- package.json
-|-- tsconfig.json
-|-- tailwind.config.ts
-|-- next.config.ts
-`-- README.md
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx              # Root layout (theme, fonts, providers)
+│   │   ├── page.tsx                # Home page — renders CalculatorApp
+│   │   ├── globals.css             # Tailwind directives + custom tokens
+│   │   └── api/
+│   │       └── calculations/
+│   │           └── route.ts        # GET / POST / DELETE calculation history API
+│   │
+│   ├── components/
+│   │   ├── calculator/
+│   │   │   ├── calculator-app.tsx  # Main app shell (header, footer, layout, keyboard events)
+│   │   │   ├── calculator-display.tsx  # Expression preview + result readout + copy button
+│   │   │   ├── calculator-keyboard.tsx # BasicCalculator + ScientificCalculator + Btn/SciBtn
+│   │   │   ├── history-panel.tsx   # Scrollable calculation history with search
+│   │   │   └── reference-tables.tsx # Tabbed reference tables (Trig, Log, Const, Powers, Conv)
+│   │   └── ui/                     # shadcn/ui primitives
+│   │
+│   ├── stores/
+│   │   └── calculator-store.ts     # Zustand store — expression evaluator, history, mode, angle unit
+│   │
+│   └── lib/
+│       ├── db.ts                   # Prisma client singleton
+│       ├── exact-values.ts         # Exact form lookup (trig, fractions, radicals, constants)
+│       └── utils.ts                # cn() helper and shared utilities
+│
+├── prisma/
+│   └── schema.prisma               # Calculation model definition
+│
+├── public/                         # Static assets
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+└── README.md
 ```
 
 ---
@@ -157,7 +163,7 @@ calculator/
 | Requirement | Minimum Version |
 |-------------|:---------------:|
 | Node.js | >= 18 |
-| npm, yarn, or pnpm | latest stable |
+| Bun | latest stable |
 
 ### Installation
 
@@ -167,17 +173,17 @@ git clone https://github.com/brutal-45/Calculator.git
 cd Calculator
 
 # 2. Install dependencies
-npm install
+bun install
 
 # 3. Generate the Prisma client and create the SQLite database
-npx prisma generate
-npx prisma db push
+bunx prisma generate
+bunx prisma db push
 ```
 
 ### Development
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -185,8 +191,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Production Build
 
 ```bash
-npm run build
-npm start
+bun run build
+bun start
 ```
 
 ---
@@ -196,16 +202,10 @@ npm start
 Contributions are welcome! To keep the codebase consistent, please follow these guidelines:
 
 1. **Fork** the repository and create a feature branch (`git checkout -b feat/your-feature`).
-2. **Write** clean, typed TypeScript. Run `npm run lint` before committing.
-3. **Test** your changes locally with `npm run dev`.
+2. **Write** clean, typed TypeScript. Run `bun run lint` before committing.
+3. **Test** your changes locally with `bun run dev`.
 4. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/) format (e.g., `feat: add natural-log reference tab`).
 5. **Open** a pull request against `main` with a clear description of the change.
-
-### Code Style
-
-- Use **Prettier** with the included config (`npm run format`).
-- Use **ESLint** with Next.js and TypeScript rules (`npm run lint`).
-- Prefer functional components and hooks; avoid class components.
 
 ### Reporting Issues
 
