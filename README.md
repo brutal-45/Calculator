@@ -2,7 +2,7 @@
 
 # ⚡ Calculator Pro
 
-**A beautiful, feature-rich scientific calculator with exact form detection, persistent history, and comprehensive reference tables.**
+**A beautiful, feature-rich scientific calculator with exact form detection, persistent history, and comprehensive reference tables.** 
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
