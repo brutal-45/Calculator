@@ -15,12 +15,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Calculator Pro — Powerful & Precise",
-  description: "A beautiful scientific calculator with history, keyboard support, and multiple calculation modes. Built for precision and elegance.",
-  keywords: ["calculator", "scientific calculator", "math", "calculator app"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "Calculator Pro by BrutalTools — Beautiful & Precise",
+  description: "A powerful scientific calculator with exact form detection, persistent history, keyboard support, and comprehensive reference tables. Built with Next.js, TypeScript, and Tailwind CSS.",
+  keywords: ["calculator", "scientific calculator", "math", "trigonometry", "calculator app", "brutaltools"],
+  authors: [{ name: "BrutalTools", url: "https://github.com/brutal-45" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+  },
+  openGraph: {
+    title: "Calculator Pro by BrutalTools",
+    description: "A beautiful scientific calculator with exact form detection and reference tables.",
+    type: "website",
   },
 };
 

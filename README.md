@@ -1,178 +1,253 @@
-<div align="center">
+# Calculator Pro by BrutalTools
 
-<img src="public/brutaltools-logo.svg" alt="BrutalTools Calculator" width="120" height="120" />
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-# BrutalTools Calculator
-
-**A powerful, beautiful scientific calculator with exact value recognition.**
-
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
-[![shadcn/ui](https://img.shields.io/badge/shadcn/ui-latest-black)](https://ui.shadcn.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-SQLite-2d3748?logo=prisma)](https://www.prisma.io/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-
-**sin(30°) = 1/2** — because answers should be exact.
-
-</div>
+> A beautiful, feature-rich scientific calculator web app with smooth animations, persistent history, and reference tables -- built with modern web technologies.
 
 ---
 
-## ✨ Features
+## Overview
 
-### Calculator Modes
-- **Basic** — Standard arithmetic: add, subtract, multiply, divide, percent
-- **Scientific** — 20+ functions: sin, cos, tan (with inverse), log, ln, √, ∛, x², x³, factorial, eˣ, 10ˣ, 1/x, |x|
+**Calculator Pro** is a fully-featured scientific calculator that runs entirely in the browser. It combines the reliability of a hardware calculator with the convenience and polish of a modern web application. Whether you need quick arithmetic or advanced trigonometric and logarithmic computations, Calculator Pro delivers instant, accurate results with a sleek dark-themed interface.
 
-### Exact Value Recognition
-The calculator recognizes common mathematical exact forms and displays them alongside decimal values:
+Developed under **BrutalTools**.
 
-| Input | Decimal | Exact Form |
-|-------|---------|------------|
-| `sin(30)` | 0.5 | **1/2** |
-| `sin(45)` | 0.707106… | **√2/2** |
-| `cos(60)` | 0.5 | **1/2** |
-| `tan(45)` | 1 | **1** |
-| `sin(60)` | 0.866025… | **√3/2** |
-| `√(4)` | 2 | **2** |
+---
 
-Works for all standard angles (0°, 15°, 30°, 45°, 60°, 75°, 90°) and their multiples.
+## Screenshots
 
-### Reference Tables (5 tabs)
-- **Trig** — sin, cos, tan values with decimal AND exact forms for 14 angles
-- **Log** — log₁₀, ln, log₂ for common numbers with squares and roots
-- **Constants** — π, e, √2, √3, φ (golden ratio), and more with descriptions
-- **Powers** — n², n³, √n, ∛n, n! for numbers 1–20
-- **Conversions** — Degrees ↔ Radians, Temperature (°C/°F/K), Common Fractions
+| Basic Mode | Scientific Mode |
+|:---:|:---:|
+| *[Screenshot placeholder -- basic calculator view]* | *[Screenshot placeholder -- scientific calculator view]* |
 
-### Calculation History
-- Every calculation saved with **exact form** and **mode badge** (Basic/Scientific)
-- **Relative timestamps** (just now, 5m ago, 2h ago, yesterday)
-- **Copy to clipboard** on any result
-- **Click to reuse** any previous result
-- Persisted in SQLite database
+| Calculation History | Reference Tables |
+|:---:|:---:|
+| *[Screenshot placeholder -- history panel]* | *[Screenshot placeholder -- reference table sheet]* |
 
-### Full Keyboard Support
-| Key | Action |
-|-----|--------|
-| `0-9` | Digits |
-| `+ - * /` | Operators |
-| `Enter` / `=` | Calculate |
-| `Escape` | Clear All (AC) |
-| `Delete` | Clear Entry (CE) |
-| `Backspace` | Delete last digit |
-| `( )` | Parentheses |
-| `%` | Percentage |
+---
 
-### Smart UX
-- **Dynamic AC/CE** — Button toggles between AC (clear all) and CE (clear entry)
-- **Auto-close parentheses** — Missing closing parens are automatically added
-- **Live expression preview** — See the full expression as you build it
-- **Copy result** — Hover to reveal copy button on the display
-- **Degree/Radian toggle** — Switch between DEG and RAD mode
+## Features
+
+### Calculator
+
+| # | Feature | Description |
+|:-:|---------|-------------|
+| 1 | Basic & Scientific Modes | Toggle seamlessly between a streamlined basic pad and a full scientific layout with animated transitions |
+| 2 | Live Expression Preview | See your expression rendered in real time as you type |
+| 3 | Exact Form Detection | Results like `sin(30 deg)` are returned as `1/2` rather than decimal approximations; supports `sqrt(2)/2`, `sqrt(3)`, and more |
+| 4 | Full Keyboard Support | Type numbers, operators, and functions directly from your keyboard (see [Keyboard Shortcuts](#keyboard-shortcuts)) |
+| 5 | Smart AC / CE Toggle | `AC` clears everything; after the first input it becomes `CE` to clear just the current entry |
+| 6 | DEG / RAD Toggle | Switch angle units instantly; all trig functions respect the selected mode |
+| 7 | Parentheses | Auto-nested parentheses with visual depth tracking |
+| 8 | Copy to Clipboard | One-click copy of the displayed result |
+
+### Reference Tables
+
+Five tabbed reference sheets accessible from the scientific pad:
+
+| Tab | Contents |
+|-----|----------|
+| Trigonometry | Common sin, cos, tan values; identities |
+| Logarithms | log, ln, and exponential reference |
+| Constants | Mathematical and physical constants |
+| Powers | Squares, cubes, and nth powers |
+| Conversions | Unit conversion quick-reference |
+
+### History & Persistence
+
+Every calculation is saved to a local **SQLite** database via **Prisma ORM**, so your history survives page reloads and browser restarts. Scroll through past expressions and results, and clear history at any time.
 
 ### Design
-- Dark theme with emerald + amber accent colors
-- Framer Motion animations on every interaction
-- Glassmorphism card with gradient background
-- Responsive: works on mobile, tablet, and desktop
-- Custom BrutalTools lightning bolt logo
+
+- **Dark theme** with emerald and amber accent palette
+- **Glassmorphism** card effects throughout the UI
+- **Framer Motion** animations for mode transitions, button presses, and sheet slides
+- **Fully responsive** -- optimized for desktop and mobile viewports
+- Card-based mobile layouts presented in bottom sheets for comfortable thumb reach
 
 ---
 
-## 🛠 Tech Stack
+## Keyboard Shortcuts
 
-| Technology | Purpose |
-|-----------|---------|
-| [Next.js 16](https://nextjs.org/) | React framework with App Router |
-| [TypeScript 5](https://www.typescriptlang.org/) | Type safety |
-| [Tailwind CSS 4](https://tailwindcss.com/) | Styling |
-| [shadcn/ui](https://ui.shadcn.com/) | Component library |
-| [Zustand](https://zustand-demo.pmnd.rs/) | State management |
-| [Prisma](https://www.prisma.io/) | SQLite ORM for history persistence |
-| [Framer Motion](https://www.framer.com/motion/) | Animations |
-| [Lucide React](https://lucide.dev/) | Icons |
+| Key | Action |
+|-----|--------|
+| `0` -- `9` | Enter digit |
+| `.` | Decimal point |
+| `+` | Add |
+| `-` | Subtract |
+| `*` | Multiply |
+| `/` | Divide |
+| `Enter` or `=` | Evaluate expression |
+| `Escape` | Clear all (AC) |
+| `Backspace` | Delete last character |
+| `(` `)` | Open / close parentheses |
+| `%` | Percent |
+| `^` | Power |
 
 ---
 
-## 🚀 Getting Started
+## Tech Stack
+
+| Category | Technology | Purpose |
+|----------|-----------|---------|
+| Framework | **Next.js 16** (App Router) | React framework with server components and file-based routing |
+| Language | **TypeScript 5** | Static type checking across the entire codebase |
+| Styling | **Tailwind CSS 4** | Utility-first CSS with JIT engine |
+| Components | **shadcn/ui** (Radix UI) | Accessible, composable UI primitives |
+| State | **Zustand** | Lightweight global state management |
+| Database | **Prisma ORM** + **SQLite** | Typed database access with zero-config local storage |
+| Animation | **Framer Motion** | Declarative spring and gesture animations |
+| Icons | **Lucide React** | Consistent, tree-shakeable icon set |
+
+---
+
+## Project Structure
+
+```
+calculator/
+|-- app/
+|   |-- layout.tsx              # Root layout (theme, fonts, providers)
+|   |-- page.tsx                # Home page -- calculator
+|   |-- api/
+|       |-- history/
+|           |-- route.ts        # GET / POST calculation history
+|   |-- globals.css             # Tailwind directives + custom tokens
+|
+|-- components/
+|   |-- calculator/
+|   |   |-- display.tsx         # Expression preview + result readout
+|   |   |-- button-grid.tsx     # Basic & scientific button layouts
+|   |   |-- keypad-button.tsx   # Individual button with press animation
+|   |   |-- history-panel.tsx   # Scrollable calculation history
+|   |   |-- ref-tables.tsx      # Tabbed reference tables sheet
+|   |   |-- angle-toggle.tsx    # DEG / RAD switch
+|   |   `-- copy-button.tsx     # Copy-to-clipboard action
+|   |-- ui/                     # shadcn/ui primitives
+|   |-- header.tsx              # App bar with logo + GitHub link
+|   `-- footer.tsx              # "Developed under BrutalTools"
+|
+|-- lib/
+|   |-- store.ts                # Zustand store (expression, history, mode)
+|   |-- evaluator.ts            # Expression parser + exact-form detection
+|   `-- utils.ts                # cn() helper and shared utilities
+|
+|-- prisma/
+|   |-- schema.prisma           # History model definition
+|   `-- dev.db                  # SQLite database file (gitignored)
+|
+|-- public/
+|   `-- logo.svg                # BrutalTools lightning-bolt logo
+|
+|-- package.json
+|-- tsconfig.json
+|-- tailwind.config.ts
+|-- next.config.ts
+`-- README.md
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) 18+
-- [Bun](https://bun.sh/) (recommended) or npm
+
+| Requirement | Minimum Version |
+|-------------|:---------------:|
+| Node.js | >= 18 |
+| npm, yarn, or pnpm | latest stable |
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/calculator.git
-cd calculator
-bun install
-bun run db:push
-bun run dev
+# 1. Clone the repository
+git clone https://github.com/brutal-45/Calculator.git
+cd Calculator
+
+# 2. Install dependencies
+npm install
+
+# 3. Generate the Prisma client and create the SQLite database
+npx prisma generate
+npx prisma db push
+```
+
+### Development
+
+```bash
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Environment Variables
+### Production Build
 
-Create a `.env` file:
-
-```env
-DATABASE_URL="file:./db/custom.db"
+```bash
+npm run build
+npm start
 ```
 
 ---
 
-## 📁 Project Structure
+## Contributing
+
+Contributions are welcome! To keep the codebase consistent, please follow these guidelines:
+
+1. **Fork** the repository and create a feature branch (`git checkout -b feat/your-feature`).
+2. **Write** clean, typed TypeScript. Run `npm run lint` before committing.
+3. **Test** your changes locally with `npm run dev`.
+4. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/) format (e.g., `feat: add natural-log reference tab`).
+5. **Open** a pull request against `main` with a clear description of the change.
+
+### Code Style
+
+- Use **Prettier** with the included config (`npm run format`).
+- Use **ESLint** with Next.js and TypeScript rules (`npm run lint`).
+- Prefer functional components and hooks; avoid class components.
+
+### Reporting Issues
+
+If you find a bug or have a feature request, please [open an issue](https://github.com/brutal-45/Calculator/issues) and include:
+
+- A clear title and description.
+- Steps to reproduce (for bugs).
+- Expected vs. actual behavior.
+- Screenshots if applicable.
+
+---
+
+## License
+
+This project is released under the **MIT License**.
 
 ```
-src/
-├── app/
-│   ├── api/calculations/route.ts   # REST API for history CRUD
-│   ├── globals.css                  # Global styles + theme
-│   ├── layout.tsx                   # Root layout
-│   └── page.tsx                     # Main page
-├── components/
-│   ├── calculator/
-│   │   ├── calculator-app.tsx       # Main app shell + layout
-│   │   ├── calculator-display.tsx   # Display with exact values
-│   │   ├── calculator-keyboard.tsx  # Basic + Scientific buttons
-│   │   ├── history-panel.tsx        # History with badges + copy
-│   │   └── reference-tables.tsx     # 5-tab reference tables
-│   ├── ui/                          # shadcn/ui components
-│   └── theme-provider.tsx           # Dark/Light/System theme
-├── lib/
-│   ├── db.ts                        # Prisma client
-│   ├── exact-values.ts              # Exact value recognition engine
-│   └── utils.ts                     # Utility functions
-├── stores/
-│   └── calculator-store.ts          # Zustand state + math engine
-prisma/
-└── schema.prisma                    # Database schema
+MIT License
+
+Copyright (c) 2025 BrutalTools
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
 
 ---
 
-## 🧮 How Exact Values Work
-
-The `exact-values.ts` engine uses a multi-layered matching system:
-
-1. **Expression parsing** — Detects if the expression is a trig function, sqrt, factorial, etc.
-2. **Known angle lookup** — Matches standard angles against a table of exact forms
-3. **Fraction detection** — Checks if the result is a common simple fraction (1/2, 1/3, 2/3, etc.)
-4. **Constant matching** — Recognizes π, e, √2, √3, φ, etc.
-5. **Radical simplification** — Detects multiples of surds (√2, √3, √5, etc.)
-
-All matching uses epsilon comparison (1e-9 tolerance) to handle floating-point imprecision.
-
----
-
-## 📄 License
-
-Developed under **BrutalTools**. MIT License.
-
-<div align="center">
-  <img src="public/brutaltools-logo.svg" alt="BrutalTools" width="24" height="24" />
-  <sub>Built with ⚡ by BrutalTools</sub>
-</div>
+<p align="center">
+  <strong>Developed under BrutalTools</strong>
+</p>

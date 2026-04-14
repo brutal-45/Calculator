@@ -235,7 +235,7 @@ export function CalculatorApp() {
                     <span className="hidden sm:inline">History</span>
                   </button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-80 bg-zinc-900 border-white/[0.06] p-0">
+                <SheetContent side="left" className="w-full sm:w-80 bg-zinc-900 border-white/[0.06] p-0">
                   <SheetTitle className="sr-only">Calculation History</SheetTitle>
                   <HistoryPanel />
                 </SheetContent>
@@ -297,6 +297,8 @@ export function CalculatorApp() {
           <p className="text-[11px] text-zinc-500 text-center">
             Developed under{' '}
             <span className="font-bold bg-gradient-to-r from-emerald-400 to-amber-400 bg-clip-text text-transparent">BrutalTools</span>
+            {' '}&middot;{' '}
+            <span className="tabular-nums">&copy; {new Date().getFullYear()}</span>
           </p>
           <Zap className="w-3 h-3 text-amber-500/60" />
         </div>

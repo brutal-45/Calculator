@@ -2,34 +2,78 @@
 
 import { useCalculatorStore, type HistoryItem } from '@/stores/calculator-store'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Clock, Trash2, ArrowRight, Copy, Check, X, Calculator, Atom } from 'lucide-react'
+import { Clock, Trash2, ArrowRight, Copy, Check, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 export function HistoryPanel() {
   const { history, applyHistoryItem, clearHistory } = useCalculatorStore()
+  const [search, setSearch] = useState('')
+  const [confirmClear, setConfirmClear] = useState(false)
 
-  const handleClear = () => { clearHistory() }
+  const filtered = search.trim()
+    ? history.filter(item =>
+        item.expression.toLowerCase().includes(search.toLowerCase()) ||
+        item.result.toLowerCase().includes(search.toLowerCase())
+      )
+    : history
+
+  const handleClear = () => {
+    if (confirmClear) {
+      clearHistory()
+      setConfirmClear(false)
+    } else {
+      setConfirmClear(true)
+      setTimeout(() => setConfirmClear(false), 2500)
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
       {/* header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-emerald-500" />
-          <h3 className="text-sm font-bold text-white">History</h3>
+      <div className="px-4 pt-3 pb-2 border-b border-white/[0.06] flex-shrink-0 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-emerald-500" />
+            <h3 className="text-sm font-bold text-white">History</h3>
+            {history.length > 0 && (
+              <motion.span
+                key={history.length}
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-bold"
+              >
+                {history.length}
+              </motion.span>
+            )}
+          </div>
           {history.length > 0 && (
-            <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-bold">
-              {history.length}
-            </span>
+            <button
+              onClick={handleClear}
+              className={`flex items-center gap-1 text-[11px] transition-colors cursor-pointer px-2 py-1 rounded-lg ${
+                confirmClear
+                  ? 'text-red-400 bg-red-500/15 hover:bg-red-500/25'
+                  : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10'
+              }`}
+            >
+              <Trash2 className="w-3 h-3" />
+              <span>{confirmClear ? 'Confirm?' : 'Clear'}</span>
+            </button>
           )}
         </div>
-        {history.length > 0 && (
-          <button onClick={handleClear}
-            className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-red-400 transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-red-500/10">
-            <Trash2 className="w-3 h-3" />
-            <span>Clear</span>
-          </button>
+
+        {/* search */}
+        {history.length > 3 && (
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search history..."
+              className="w-full h-7 pl-7 pr-3 text-[11px] bg-zinc-800/50 border border-white/[0.06] rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+            />
+          </div>
         )}
       </div>
 
@@ -37,15 +81,30 @@ export function HistoryPanel() {
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-0.5">
           <AnimatePresence mode="popLayout">
-            {history.length === 0 ? (
+            {filtered.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="flex flex-col items-center justify-center py-14 text-zinc-600">
-                <Clock className="w-9 h-9 mb-2.5 opacity-20" />
-                <p className="text-sm font-medium">No calculations yet</p>
-                <p className="text-[11px] mt-1 opacity-50">Results will appear here</p>
+                {search ? (
+                  <>
+                    <Search className="w-8 h-8 mb-2.5 opacity-25" />
+                    <p className="text-sm font-medium">No matches found</p>
+                    <p className="text-[11px] mt-1 opacity-50">Try a different search term</p>
+                  </>
+                ) : (
+                  <>
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      <Clock className="w-9 h-9 opacity-20" />
+                    </motion.div>
+                    <p className="text-sm font-medium mt-2.5">No calculations yet</p>
+                    <p className="text-[11px] mt-1 opacity-50">Results will appear here</p>
+                  </>
+                )}
               </motion.div>
             ) : (
-              history.map((item, index) => (
+              filtered.map((item, index) => (
                 <HistoryEntry key={`${item.id || ''}-${item.expression}-${index}`}
                   item={item} onClick={() => applyHistoryItem(item)} />
               ))
@@ -81,12 +140,12 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
     >
       <button
         onClick={onClick}
-        className="w-full text-right px-3 py-2.5 rounded-xl hover:bg-white/[0.04] active:bg-white/[0.07] transition-colors cursor-pointer"
+        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.04] active:bg-white/[0.07] transition-colors cursor-pointer"
         aria-label={`Use result: ${item.result}`}
       >
         {/* top row: expression + mode badge */}
         <div className="flex items-center justify-between gap-2 mb-0.5">
-          <p className="text-[11px] text-zinc-500 font-mono truncate group-hover:text-zinc-400 transition-colors flex-1 text-left">
+          <p className="text-[11px] text-zinc-500 font-mono truncate flex-1">
             {item.expression}
           </p>
           <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -97,33 +156,37 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
             }`}>
               {item.mode === 'scientific' ? 'SCI' : 'BAS'}
             </span>
+            {/* copy — always visible on touch, hover on desktop */}
+            <button onClick={handleCopy}
+              className="lg:opacity-0 lg:group-hover:opacity-100 p-1 rounded-md hover:bg-white/5 active:bg-white/10 transition-all cursor-pointer"
+              aria-label="Copy">
+              <AnimatePresence mode="wait">
+                {copied ? (
+                  <motion.div key="c" initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 0.5 }}>
+                    <Check className="w-3 h-3 text-emerald-400" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="p" initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 0.5 }}>
+                    <Copy className="w-3 h-3 text-zinc-500" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+            <ArrowRight className="w-3 h-3 text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
         {/* bottom row: result */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            {/* exact form badge */}
-            {item.exactForm && item.exactForm !== item.result && (
-              <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 px-1.5 py-0.5 rounded-md">
-                {item.exactForm}
-              </span>
-            )}
-            <p className="text-[0.95rem] font-bold text-white font-mono truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>
-              {item.result}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
-            {/* copy button */}
-            <button onClick={handleCopy}
-              className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-white/5 transition-all cursor-pointer"
-              aria-label="Copy">
-              {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-zinc-500" />}
-            </button>
-            {/* arrow */}
-            <ArrowRight className="w-3 h-3 text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
+        <div className="flex items-center gap-1.5 min-w-0">
+          {/* exact form badge */}
+          {item.exactForm && item.exactForm !== item.result && (
+            <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 px-1.5 py-0.5 rounded-md">
+              {item.exactForm}
+            </span>
+          )}
+          <p className="text-[0.95rem] font-bold text-white font-mono truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {item.result}
+          </p>
         </div>
 
         {/* timestamp */}

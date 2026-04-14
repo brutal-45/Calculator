@@ -135,3 +135,36 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* Custom selection color — emerald accent */
+::selection {
+  background-color: oklch(0.6 0.2 160 / 30%);
+  color: inherit;
+}
+
+/* Smooth scrolling everywhere */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text selection on interactive calculator elements */
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Custom thin scrollbar for panels */
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  width: 4px;
+}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

@@ -9,13 +9,13 @@ type Variant = 'default' | 'operator' | 'fn' | 'equals' | 'wide' | 'ghost'
 
 const variantClass: Record<Variant, string> = {
   default:
-    'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600 text-white border border-white/[0.06]',
+    'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600 text-white border border-white/[0.06] shadow-sm shadow-black/10',
   operator:
     'bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:from-amber-600 active:to-amber-700 text-white shadow-lg shadow-amber-900/25',
   fn: 'bg-zinc-700/50 hover:bg-zinc-600/60 active:bg-zinc-500/60 text-zinc-300 border border-white/[0.06]',
   equals:
     'bg-gradient-to-b from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 active:from-emerald-600 active:to-emerald-700 text-white shadow-lg shadow-emerald-900/25',
-  wide: 'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600 text-white border border-white/[0.06]',
+  wide: 'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600 text-white border border-white/[0.06] shadow-sm shadow-black/10',
   ghost: 'bg-transparent hover:bg-zinc-700/40 active:bg-zinc-600/40 text-zinc-400',
 }
 
@@ -104,7 +104,7 @@ export function BasicCalculator() {
         onClick={showAC ? store.clear : store.clearEntry}
         variant={showAC ? 'fn' : 'ghost'}
       />
-      <Btn icon={<span className="text-lg font-bold">±</span>} onClick={store.toggleSign} variant="fn" />
+      <Btn icon={<span className="text-lg font-bold">&plusmn;</span>} onClick={store.toggleSign} variant="fn" />
       <Btn icon={<Percent className="w-5 h-5" />} onClick={store.percentage} variant="fn" />
       <Btn label="÷" onClick={() => store.appendOperator('÷')} variant="operator" />
 
@@ -173,7 +173,11 @@ export function ScientificCalculator() {
       {/* Main grid */}
       <div className="grid grid-cols-4 gap-2.5">
         {/* Row 1 */}
-        <Btn label="AC/CE" onClick={showAC ? store.clear : store.clearEntry} variant={showAC ? 'fn' : 'ghost'} className="!text-sm" />
+        <Btn
+          label={showAC ? 'AC' : 'CE'}
+          onClick={showAC ? store.clear : store.clearEntry}
+          variant={showAC ? 'fn' : 'ghost'}
+        />
         <Btn icon={<ArrowLeft className="w-5 h-5" />} onClick={store.backspace} variant="fn" />
         <Btn label="(" onClick={() => store.appendParenthesis('(')} variant="fn" />
         <Btn label="÷" onClick={() => store.appendOperator('÷')} variant="operator" />
