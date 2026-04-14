@@ -6,7 +6,7 @@ interface ExactMatch {
   decimal: number     // e.g. 0.5
 }
 
-// Helper: check if two numbers are "close enough"
+// Helper: check if two numbers are "close enough" 
 function approx(a: number, b: number, eps = 1e-9): boolean {
   if (!isFinite(a) || !isFinite(b)) return a === b
   return Math.abs(a - b) < eps
