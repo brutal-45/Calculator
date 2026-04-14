@@ -7,7 +7,7 @@ Work Log:
 - Fixed logo Math.random() flickering — replaced with static SVG gradient ID
 - Fixed exact form trig lookup bug in RAD mode — findExactForm now verifies decimal matches expected trig value
 - Fixed keyboard handler regex — removed unhandled ^ and c characters
-- Cleaned up dead JSX children in the divide button of BasicCalculator
+- Cleaned up dead JSX children in the divide button of BasicCalculator 
 - Added GitHub link component to footer with add/edit/remove functionality (localStorage)
 
 Stage Summary:
