@@ -3,7 +3,7 @@
 import { useCalculatorStore } from '@/stores/calculator-store'
 import { motion } from 'framer-motion'
 import { Percent, ArrowLeft } from 'lucide-react'
-
+ 
 /* ──────── reusable button ──────── */
 type Variant = 'default' | 'operator' | 'fn' | 'equals' | 'wide' | 'ghost'
 
