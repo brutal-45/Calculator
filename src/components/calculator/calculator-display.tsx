@@ -33,15 +33,18 @@ export function CalculatorDisplay() {
   const isError = display === 'Error'
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950 to-zinc-900 p-5 sm:p-6 shadow-inner border border-white/5 relative group overflow-hidden">
-      {/* subtle result glow */}
+    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950/90 to-zinc-900/90 p-5 sm:p-6 shadow-inner border border-white/[0.05] relative group overflow-hidden">
+      {/* Subtle top highlight line */}
+      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      {/* result glow — stronger, more vibrant */}
       <AnimatePresence>
         {hasResult && !isError && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent pointer-events-none"
+            className="result-glow absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] to-amber-500/[0.02] pointer-events-none rounded-2xl"
           />
         )}
       </AnimatePresence>
@@ -66,7 +69,7 @@ export function CalculatorDisplay() {
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7 }}
-              className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-[10px] font-bold text-emerald-400 flex-shrink-0"
+              className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-[10px] font-bold text-emerald-400 flex-shrink-0 shadow-sm shadow-emerald-500/10"
             >
               {parenthesesCount}
             </motion.span>
@@ -119,13 +122,13 @@ export function CalculatorDisplay() {
           </motion.span>
         </div>
 
-        {/* Copy button — always visible on mobile, hover on desktop */}
+        {/* Copy button */}
         {hasResult && !isError && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             onClick={handleCopy}
-            className="lg:opacity-0 lg:group-hover:opacity-100 mb-2 p-1.5 rounded-lg hover:bg-white/5 active:bg-white/10 transition-all cursor-pointer"
+            className="lg:opacity-0 lg:group-hover:opacity-100 mb-2 p-1.5 rounded-lg hover:bg-white/5 active:bg-white/10 transition-all cursor-pointer border border-transparent hover:border-white/[0.06]"
             aria-label="Copy result"
           >
             <AnimatePresence mode="wait">
@@ -142,6 +145,9 @@ export function CalculatorDisplay() {
           </motion.button>
         )}
       </div>
+
+      {/* Subtle bottom divider */}
+      <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
     </div>
   )
 }

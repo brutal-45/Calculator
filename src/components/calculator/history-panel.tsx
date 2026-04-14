@@ -31,17 +31,19 @@ export function HistoryPanel() {
   return (
     <div className="flex flex-col h-full">
       {/* header */}
-      <div className="px-4 pt-3 pb-2 border-b border-white/[0.06] flex-shrink-0 space-y-2">
+      <div className="px-4 pt-3 pb-2 border-b border-white/[0.05] flex-shrink-0 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-emerald-500" />
+            <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/10">
+              <Clock className="w-3.5 h-3.5 text-emerald-500" />
+            </div>
             <h3 className="text-sm font-bold text-white">History</h3>
             {history.length > 0 && (
               <motion.span
                 key={history.length}
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-bold"
+                className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 px-1.5 py-0.5 rounded-full font-bold"
               >
                 {history.length}
               </motion.span>
@@ -50,10 +52,10 @@ export function HistoryPanel() {
           {history.length > 0 && (
             <button
               onClick={handleClear}
-              className={`flex items-center gap-1 text-[11px] transition-colors cursor-pointer px-2 py-1 rounded-lg ${
+              className={`flex items-center gap-1 text-[11px] transition-all cursor-pointer px-2 py-1 rounded-lg ${
                 confirmClear
-                  ? 'text-red-400 bg-red-500/15 hover:bg-red-500/25'
-                  : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10'
+                  ? 'text-red-400 bg-red-500/15 hover:bg-red-500/25 border border-red-500/20'
+                  : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent'
               }`}
             >
               <Trash2 className="w-3 h-3" />
@@ -64,14 +66,14 @@ export function HistoryPanel() {
 
         {/* search */}
         {history.length > 3 && (
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
+          <div className="relative group">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search history..."
-              className="w-full h-7 pl-7 pr-3 text-[11px] bg-zinc-800/50 border border-white/[0.06] rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+              className="w-full h-7 pl-7 pr-3 text-[11px] bg-zinc-800/40 border border-white/[0.05] rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/30 focus:bg-zinc-800/60 focus:ring-1 focus:ring-emerald-500/15 transition-all"
             />
           </div>
         )}
@@ -86,7 +88,9 @@ export function HistoryPanel() {
                 className="flex flex-col items-center justify-center py-14 text-zinc-600">
                 {search ? (
                   <>
-                    <Search className="w-8 h-8 mb-2.5 opacity-25" />
+                    <div className="w-12 h-12 rounded-2xl bg-zinc-800/40 border border-white/[0.04] flex items-center justify-center mb-3">
+                      <Search className="w-5 h-5 opacity-30" />
+                    </div>
                     <p className="text-sm font-medium">No matches found</p>
                     <p className="text-[11px] mt-1 opacity-50">Try a different search term</p>
                   </>
@@ -95,10 +99,11 @@ export function HistoryPanel() {
                     <motion.div
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                      className="w-12 h-12 rounded-2xl bg-zinc-800/40 border border-white/[0.04] flex items-center justify-center mb-3"
                     >
-                      <Clock className="w-9 h-9 opacity-20" />
+                      <Clock className="w-5 h-5 opacity-20" />
                     </motion.div>
-                    <p className="text-sm font-medium mt-2.5">No calculations yet</p>
+                    <p className="text-sm font-medium">No calculations yet</p>
                     <p className="text-[11px] mt-1 opacity-50">Results will appear here</p>
                   </>
                 )}
@@ -140,7 +145,7 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
     >
       <button
         onClick={onClick}
-        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.04] active:bg-white/[0.07] transition-colors cursor-pointer"
+        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.04] active:bg-white/[0.07] transition-all cursor-pointer border border-transparent hover:border-white/[0.03]"
         aria-label={`Use result: ${item.result}`}
       >
         {/* top row: expression + mode badge */}
@@ -151,8 +156,8 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
               item.mode === 'scientific'
-                ? 'bg-violet-500/10 text-violet-400'
-                : 'bg-zinc-800 text-zinc-500'
+                ? 'bg-violet-500/10 text-violet-400 border border-violet-500/15'
+                : 'bg-zinc-800/80 text-zinc-500 border border-white/[0.04]'
             }`}>
               {item.mode === 'scientific' ? 'SCI' : 'BAS'}
             </span>
@@ -180,7 +185,7 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
         <div className="flex items-center gap-1.5 min-w-0">
           {/* exact form badge */}
           {item.exactForm && item.exactForm !== item.result && (
-            <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 px-1.5 py-0.5 rounded-md">
+            <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 border border-amber-500/15 px-1.5 py-0.5 rounded-md">
               {item.exactForm}
             </span>
           )}
