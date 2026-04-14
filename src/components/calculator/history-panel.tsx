@@ -8,7 +8,7 @@ import { useState } from 'react'
 
 export function HistoryPanel() {
   const { history, applyHistoryItem, clearHistory } = useCalculatorStore()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('') 
   const [confirmClear, setConfirmClear] = useState(false)
 
   const filtered = search.trim()
