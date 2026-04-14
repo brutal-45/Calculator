@@ -104,8 +104,8 @@ export function BasicCalculator() {
         onClick={showAC ? store.clear : store.clearEntry}
         variant={showAC ? 'fn' : 'ghost'}
       />
+      <Btn icon={<ArrowLeft className="w-5 h-5" />} onClick={store.backspace} variant="fn" />
       <Btn icon={<span className="text-lg font-bold">&plusmn;</span>} onClick={store.toggleSign} variant="fn" />
-      <Btn icon={<Percent className="w-5 h-5" />} onClick={store.percentage} variant="fn" />
       <Btn label="÷" onClick={() => store.appendOperator('÷')} variant="operator" />
 
       {/* Row 2 */}
