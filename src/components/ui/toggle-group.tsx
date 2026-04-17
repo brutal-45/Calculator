@@ -17,7 +17,7 @@ const ToggleGroupContext = React.createContext<
 function ToggleGroup({
   className,
   variant,
-  size,
+  size, 
   children,
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
