@@ -10,7 +10,7 @@ function TooltipProvider({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
-    <TooltipPrimitive.Provider
+    <TooltipPrimitive.Provider 
       data-slot="tooltip-provider"
       delayDuration={delayDuration}
       {...props}
