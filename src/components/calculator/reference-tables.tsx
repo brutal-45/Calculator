@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Copy, Check } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 
 type TableTab = 'trig' | 'log' | 'constants' | 'powers' | 'convert'
 
@@ -51,7 +53,7 @@ function TrigTable() {
             key={deg}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-3"
+            className="rounded-xl bg-zinc-800/30 border border-white/[0.04] p-3 hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all"
           >
             {/* angle header */}
             <div className="flex items-center justify-between mb-2">
@@ -74,7 +76,7 @@ function TrigTable() {
                       {exact && exact !== decimal && (
                         <>
                           <span className="text-zinc-600 text-[10px]">→</span>
-                          <span className="text-xs font-mono text-amber-400 font-semibold tabular-nums truncate">
+                          <span className="text-xs font-mono text-amber-400 font-semibold tabular-nums truncate bg-amber-500/5 px-1 rounded">
                             {exact}
                           </span>
                         </>
@@ -98,7 +100,7 @@ function LogTable() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
       {values.map(n => (
-        <div key={n} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-2.5">
+        <div key={n} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] p-2.5 hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all">
           <span className="text-sm font-bold text-emerald-400 tabular-nums">{n}</span>
           <div className="mt-1.5 space-y-0.5">
             <div className="flex justify-between gap-1.5">
@@ -148,20 +150,47 @@ function ConstantsTable() {
   return (
     <div className="space-y-1.5">
       {data.map(r => (
-        <div key={r.name} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2.5">
+        <div key={r.name} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] px-3 py-2.5 hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all group">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-bold text-white whitespace-nowrap">{r.name}</span>
-            <button
-              onClick={() => navigator.clipboard.writeText(r.value).catch(() => {})}
-              className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer truncate"
-            >
-              {r.value}
-            </button>
+            <CopyableValue value={r.value} />
           </div>
           <p className="text-[10px] text-zinc-500 mt-0.5">{r.desc}</p>
         </div>
       ))}
     </div>
+  )
+}
+
+/* Copyable value component for constants */
+function CopyableValue({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1200)
+    }).catch(() => {})
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer truncate flex items-center gap-1"
+    >
+      <span className="truncate">{value}</span>
+      <AnimatePresence mode="wait">
+        {copied ? (
+          <motion.span key="ck" initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 0.5 }} className="flex-shrink-0">
+            <Check className="w-3 h-3" />
+          </motion.span>
+        ) : (
+          <motion.span key="cp" initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 0.5 }} className="flex-shrink-0 opacity-50 group-hover:opacity-100">
+            <Copy className="w-3 h-3" />
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
   )
 }
 
@@ -182,7 +211,7 @@ function PowersTable() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
       {rows.map(r => (
-        <div key={r.n} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] p-2.5">
+        <div key={r.n} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] p-2.5 hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all">
           <span className="text-sm font-bold text-emerald-400 tabular-nums">n = {r.n}</span>
           <div className="mt-1.5 space-y-0.5">
             <div className="flex justify-between gap-1.5">
@@ -235,7 +264,7 @@ function ConvertTable() {
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Degrees ↔ Radians</p>
         <div className="grid grid-cols-2 gap-1.5">
           {degRows.map(d => (
-            <div key={d} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2 flex items-center justify-between">
+            <div key={d} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] px-3 py-2 flex items-center justify-between hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all">
               <span className="text-xs font-bold text-emerald-400 tabular-nums">{d}°</span>
               <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(d * DEG_TO_RAD, 6)}</span>
             </div>
@@ -248,7 +277,7 @@ function ConvertTable() {
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-1">Temperature</p>
         <div className="space-y-1.5">
           {tempRows.map(r => (
-            <div key={r.c} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-3 py-2.5">
+            <div key={r.c} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] px-3 py-2.5 hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all">
               <div className="flex items-center justify-between gap-2 mb-1">
                 <span className="text-xs font-bold text-white tabular-nums">{r.c}°C</span>
                 <span className="text-[10px] text-zinc-500">{r.desc}</span>
@@ -270,7 +299,7 @@ function ConvertTable() {
             ['1/2', 0.5], ['1/3', 1 / 3], ['2/3', 2 / 3], ['1/4', 0.25], ['3/4', 0.75],
             ['1/5', 0.2], ['1/6', 1 / 6], ['1/8', 0.125], ['1/10', 0.1], ['1/12', 1 / 12],
           ].map(([frac, dec]) => (
-            <div key={frac as string} className="rounded-xl bg-zinc-800/40 border border-white/[0.04] px-2.5 py-2 text-center">
+            <div key={frac as string} className="rounded-xl bg-zinc-800/30 border border-white/[0.04] px-2.5 py-2 text-center hover:bg-zinc-800/40 hover:border-white/[0.06] transition-all">
               <span className="text-xs font-mono font-semibold text-amber-400 tabular-nums">{frac as string}</span>
               <div className="mt-1">
                 <span className="text-[11px] font-mono text-zinc-300 tabular-nums">{fmt(dec as number)}</span>
@@ -287,12 +316,12 @@ function ConvertTable() {
 /* ════════════════════════════════════════
    MAIN EXPORT
    ════════════════════════════════════════ */
-const tabs: { value: TableTab; label: string }[] = [
-  { value: 'trig', label: 'Trig' },
-  { value: 'log', label: 'Log' },
-  { value: 'constants', label: 'Const' },
-  { value: 'powers', label: 'Powers' },
-  { value: 'convert', label: 'Conv' },
+const tabs: { value: TableTab; label: string; icon: string }[] = [
+  { value: 'trig', label: 'Trig', icon: '📐' },
+  { value: 'log', label: 'Log', icon: '📊' },
+  { value: 'constants', label: 'Const', icon: 'π' },
+  { value: 'powers', label: 'Powers', icon: '⬆' },
+  { value: 'convert', label: 'Conv', icon: '🔄' },
 ]
 
 export function ReferenceTablesPanel() {
@@ -301,18 +330,24 @@ export function ReferenceTablesPanel() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-4 pt-4 pb-0 flex-shrink-0">
-        <h3 className="text-sm font-bold text-white mb-3">Reference Tables</h3>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/10">
+            <span className="text-xs">📚</span>
+          </div>
+          <h3 className="text-sm font-bold text-white">Reference Tables</h3>
+        </div>
 
         {/* scrollable tabs for mobile */}
         <div className="overflow-x-auto -mx-4 px-4 scrollbar-none">
           <Tabs value={tab} onValueChange={(v) => setTab(v as TableTab)} className="w-full">
-            <TabsList className="w-full h-9 bg-zinc-800/60 rounded-lg p-0.5 border border-white/[0.04] min-w-max">
+            <TabsList className="w-full h-9 bg-zinc-800/40 rounded-lg p-0.5 border border-white/[0.04] min-w-max">
               {tabs.map(t => (
                 <TabsTrigger
                   key={t.value}
                   value={t.value}
-                  className="px-3.5 text-[11px] rounded-md h-8 data-[state=active]:bg-zinc-700 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all whitespace-nowrap"
+                  className="px-3.5 text-[11px] rounded-md h-8 data-[state=active]:bg-zinc-700 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all whitespace-nowrap gap-1"
                 >
+                  <span className="text-[10px]">{t.icon}</span>
                   {t.label}
                 </TabsTrigger>
               ))}
