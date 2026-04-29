@@ -190,9 +190,9 @@ export function CalculatorApp() {
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">
-                  by{' '}
+                  {' '}
                   <span className="text-shimmer font-bold">
-                    BrutalTools
+                    
                   </span>
                 </p>
               </div>
