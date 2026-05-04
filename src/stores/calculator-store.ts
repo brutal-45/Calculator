@@ -5,7 +5,7 @@ export type CalculatorMode = 'basic' | 'scientific'
 export type AngleUnit = 'deg' | 'rad'
 
 export interface HistoryItem {
-  id?: string
+  id?: string 
   expression: string
   result: string
   exactForm: string | null
