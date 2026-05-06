@@ -19,7 +19,7 @@ Stage Summary:
 ---
 Task ID: 2
 Agent: Main Agent
-Task: Make the calculator app more polished and update README.md   
+Task: Make the calculator app more polished and update README.md
 
 Work Log:
 - Enhanced globals.css with new CSS utilities: dot-grid background, noise texture overlay, glass-card class, result-glow animation, text-shimmer animation, btn-press-effect, ambient floating orb animations, kbd-badge style
