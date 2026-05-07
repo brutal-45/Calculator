@@ -69,7 +69,7 @@
 
   <!-- Bolt outline glow -->
   <g clip-path="url(#roundClip)" filter="url(#glow)" opacity="0.3">
-    <path d="M296 108 L206 268 L258 268 L222 404 L342 224 L284 224 Z" fill="#FBBF24"/>
+    <path d="M296 108 L206 268 L258 268 L222 404 L342 224 L284 224 Z" fill="#FBBF24"/>  
   </g>
 
   <!-- Main bolt -->
