@@ -55,3 +55,23 @@ Stage Summary:
 - 7 files modified: globals.css, calculator-app.tsx, calculator-display.tsx, calculator-keyboard.tsx, history-panel.tsx, reference-tables.tsx, README.md
 - Zero lint errors, clean dev server compilation
 - New CSS utilities added: glass-card, dot-grid-bg, noise-overlay, text-shimmer, kbd-badge, ambient-orb animations, btn-press-effect
+---
+Task ID: 3
+Agent: Main Agent
+Task: Remove history from bottom, add History button, improve history panel, improve calculator
+
+Work Log:
+- Removed desktop bottom history panel entirely from calculator-app.tsx
+- Added History button in header (visible on ALL screen sizes, not just mobile) with animated green count badge
+- History now opens as a Sheet from the right side (same direction as Tables)
+- Added close (X) button inside history panel
+- Improved history panel: date grouping (Today, Yesterday, date), better entry cards with bg hover, mode badges with icons (Calculator/Atom), search with clear button, footer stats bar
+- Improved calculator display: shows current mode badge (BAS/SCI) in top-right, cleaner layout
+- Cleaned up keyboard: removed unused Percent import, consistent button spring animation scale (0.92)
+- Moved GitHub button to icon-only on mobile to reduce header clutter
+
+Stage Summary:
+- History removed from below calculator, now accessible via header button with count badge
+- 3 files modified: calculator-app.tsx, history-panel.tsx, calculator-display.tsx, calculator-keyboard.tsx
+- Zero lint errors, clean dev server compilation
+- History panel completely redesigned with date grouping, better cards, close button, footer stats

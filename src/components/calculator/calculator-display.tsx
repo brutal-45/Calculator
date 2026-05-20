@@ -6,7 +6,7 @@ import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
 
 export function CalculatorDisplay() {
-  const { display, exactDisplay, expression, hasResult, parenthesesCount } = useCalculatorStore()
+  const { display, exactDisplay, expression, hasResult, parenthesesCount, mode } = useCalculatorStore()
   const [copied, setCopied] = useState(false)
 
   // Live expression preview
@@ -33,11 +33,11 @@ export function CalculatorDisplay() {
   const isError = display === 'Error'
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950/90 to-zinc-900/90 p-5 sm:p-6 shadow-inner border border-white/[0.05] relative group overflow-hidden">
-      {/* Subtle top highlight line */}
+    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 p-5 sm:p-6 shadow-inner border border-white/[0.05] relative group overflow-hidden">
+      {/* top highlight line */}
       <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      {/* result glow — stronger, more vibrant */}
+      {/* result glow */}
       <AnimatePresence>
         {hasResult && !isError && (
           <motion.div
@@ -49,9 +49,8 @@ export function CalculatorDisplay() {
         )}
       </AnimatePresence>
 
-      {/* top bar: expression + parentheses indicator */}
+      {/* top bar: expression + parentheses + mode */}
       <div className="flex items-center justify-between gap-2 min-h-[1.75rem] pr-1">
-        {/* expression preview */}
         <motion.p
           key={previewExpr}
           initial={{ opacity: 0.6 }}
@@ -61,26 +60,34 @@ export function CalculatorDisplay() {
         >
           {showPreview ? previewExpr : '\u00A0'}
         </motion.p>
-
-        {/* parentheses counter */}
-        <AnimatePresence>
-          {parenthesesCount > 0 && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-[10px] font-bold text-emerald-400 flex-shrink-0 shadow-sm shadow-emerald-500/10"
-            >
-              {parenthesesCount}
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* mode badge */}
+          <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+            mode === 'scientific'
+              ? 'bg-violet-500/10 text-violet-400/60 border border-violet-500/10'
+              : 'bg-zinc-800/60 text-zinc-500 border border-white/[0.04]'
+          }`}>
+            {mode === 'scientific' ? 'SCI' : 'BAS'}
+          </span>
+          {/* parentheses counter */}
+          <AnimatePresence>
+            {parenthesesCount > 0 && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-[10px] font-bold text-emerald-400 shadow-sm shadow-emerald-500/10"
+              >
+                {parenthesesCount}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* Main result */}
+      {/* main result */}
       <div className="flex items-end justify-end mt-1 min-h-[3.5rem] gap-2 relative">
         <div className="flex flex-col items-end">
-          {/* Exact form (e.g. "1/2") */}
           <AnimatePresence>
             {hasResult && exactDisplay && display !== exactDisplay && !isError && (
               <motion.span
@@ -95,7 +102,6 @@ export function CalculatorDisplay() {
             )}
           </AnimatePresence>
 
-          {/* Decimal value */}
           <motion.span
             key={display}
             initial={isError ? { x: 0 } : { opacity: 0, y: 4 }}
@@ -122,7 +128,7 @@ export function CalculatorDisplay() {
           </motion.span>
         </div>
 
-        {/* Copy button */}
+        {/* copy button */}
         {hasResult && !isError && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
@@ -146,7 +152,7 @@ export function CalculatorDisplay() {
         )}
       </div>
 
-      {/* Subtle bottom divider */}
+      {/* bottom divider */}
       <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
     </div>
   )
