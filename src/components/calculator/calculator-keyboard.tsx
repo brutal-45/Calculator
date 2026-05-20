@@ -2,21 +2,21 @@
 
 import { useCalculatorStore } from '@/stores/calculator-store'
 import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Delete } from 'lucide-react'
 
 /* ──────── reusable button ──────── */
 type Variant = 'default' | 'operator' | 'fn' | 'equals' | 'wide' | 'ghost'
 
 const variantClass: Record<Variant, string> = {
   default:
-    'bg-zinc-800/60 hover:bg-zinc-700/70 active:bg-zinc-600/90 text-white border border-white/[0.06] shadow-sm shadow-black/10',
+    'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600/90 text-white border border-white/[0.07] shadow-sm shadow-black/20',
   operator:
-    'bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:from-amber-600 active:to-amber-700 text-white shadow-lg shadow-amber-900/25',
-  fn: 'bg-zinc-700/40 hover:bg-zinc-600/50 active:bg-zinc-500/60 text-zinc-300 border border-white/[0.05]',
+    'bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:from-amber-600 active:to-amber-700 text-white shadow-lg shadow-amber-900/25 border border-amber-400/20',
+  fn: 'bg-zinc-700/50 hover:bg-zinc-600/60 active:bg-zinc-500/70 text-zinc-300 border border-white/[0.06] shadow-sm shadow-black/10',
   equals:
-    'bg-gradient-to-b from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 active:from-emerald-600 active:to-emerald-700 text-white shadow-lg shadow-emerald-900/25',
-  wide: 'bg-zinc-800/60 hover:bg-zinc-700/70 active:bg-zinc-600/90 text-white border border-white/[0.06] shadow-sm shadow-black/10',
-  ghost: 'bg-transparent hover:bg-zinc-700/40 active:bg-zinc-600/40 text-zinc-400',
+    'bg-gradient-to-b from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 active:from-emerald-600 active:to-emerald-700 text-white shadow-lg shadow-emerald-900/25 border border-emerald-400/20',
+  wide: 'bg-zinc-800/70 hover:bg-zinc-700/80 active:bg-zinc-600/90 text-white border border-white/[0.07] shadow-sm shadow-black/20',
+  ghost: 'bg-transparent hover:bg-zinc-700/40 active:bg-zinc-600/50 text-zinc-400 border border-transparent',
 }
 
 function Btn({
@@ -42,7 +42,7 @@ function Btn({
       className={`
         relative flex items-center justify-center rounded-2xl font-semibold text-lg
         select-none transition-all duration-100 cursor-pointer
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:ring-offset-1 focus-visible:ring-offset-zinc-900
         h-[3.6rem] ${variantClass[variant]} ${wide ? 'col-span-2' : ''} ${className}
       `}
       aria-label={label || icon?.toString()}
@@ -76,10 +76,10 @@ function SciBtn({
       className={`
         relative flex items-center justify-center rounded-xl font-semibold text-[0.8rem]
         select-none transition-all duration-100 cursor-pointer h-10
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40
         ${accent
-          ? 'bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow shadow-emerald-900/20'
-          : 'bg-zinc-700/40 hover:bg-zinc-600/50 active:bg-zinc-500/60 text-zinc-300 border border-white/[0.05]'
+          ? 'bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow shadow-emerald-900/20 border border-emerald-400/20'
+          : 'bg-zinc-700/50 hover:bg-zinc-600/60 active:bg-zinc-500/70 text-zinc-300 border border-white/[0.06] shadow-sm shadow-black/10'
         }
       `}
       aria-label={label}

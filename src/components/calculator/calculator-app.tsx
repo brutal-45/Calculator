@@ -8,7 +8,7 @@ import { ReferenceTablesPanel } from './reference-tables'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calculator, History, Atom, Keyboard, TableProperties, Github, Zap, Heart, Trash2 } from 'lucide-react'
+import { Calculator, History, Atom, Keyboard, TableProperties, Github, Zap, Heart } from 'lucide-react'
 import { useEffect, useCallback, useState } from 'react'
 import { type HistoryItem } from '@/stores/calculator-store'
 
@@ -128,14 +128,14 @@ export function CalculatorApp() {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex items-center justify-between mb-4 px-1"
+            className="flex items-center justify-between mb-5 px-1"
           >
             <div className="flex items-center gap-3">
-              <BrutalToolsLogo size={40} />
+              <BrutalToolsLogo size={42} />
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-lg font-extrabold text-white tracking-tight leading-none">Calculator</h1>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-500/10 border border-emerald-500/15 px-1.5 py-0.5 rounded-md">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-500/10 border border-emerald-500/15 px-1.5 py-0.5 rounded-md shadow-sm">
                     Pro
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export function CalculatorApp() {
             </div>
 
             <div className="flex items-center gap-1.5">
-              {/* History button — always visible with count badge */}
+              {/* History button — Sheet on all screen sizes */}
               <Sheet open={historyOpen} onOpenChange={setHistoryOpen}>
                 <SheetTrigger asChild>
                   <button

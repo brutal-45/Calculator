@@ -2,7 +2,7 @@
 
 import { useCalculatorStore, type HistoryItem } from '@/stores/calculator-store'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Clock, Trash2, Copy, Check, Search, X, ArrowRight, Calculator, Atom } from 'lucide-react'
+import { Clock, Trash2, Copy, Check, Search, X, ArrowRight, Calculator, Atom, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo } from 'react'
 
@@ -60,17 +60,20 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
   return (
     <div className="flex flex-col h-full">
       {/* ──── header ──── */}
-      <div className="px-4 pt-5 pb-3 flex-shrink-0 space-y-3 border-b border-white/[0.05]">
+      <div className="px-5 pt-6 pb-4 flex-shrink-0 space-y-3 bg-gradient-to-b from-zinc-900/80 to-transparent">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/15">
-              <Clock className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/5 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
+                <Clock className="w-4.5 h-4.5 text-emerald-400" />
+              </div>
+              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-zinc-950 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">History</h3>
+              <h3 className="text-base font-bold text-white tracking-tight">History</h3>
               {history.length > 0 && (
-                <p className="text-[10px] text-zinc-500 -mt-0.5">
-                  {history.length} calculation{history.length !== 1 ? 's' : ''}
+                <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">
+                  {history.length} calculation{history.length !== 1 ? 's' : ''} saved
                 </p>
               )}
             </div>
@@ -82,20 +85,20 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
                 initial={confirmClear ? { scale: 0.9 } : {}}
                 animate={{ scale: 1 }}
                 onClick={handleClear}
-                className={`flex items-center gap-1.5 text-[11px] font-medium transition-all cursor-pointer px-2.5 py-1.5 rounded-lg ${
+                className={`flex items-center gap-1.5 text-[11px] font-semibold transition-all cursor-pointer px-3 py-1.5 rounded-xl ${
                   confirmClear
-                    ? 'text-red-300 bg-red-500/20 hover:bg-red-500/30 border border-red-500/25'
+                    ? 'text-red-300 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 shadow-sm shadow-red-500/10'
                     : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent'
                 }`}
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 className="w-3.5 h-3.5" />
                 <span>{confirmClear ? 'Confirm?' : 'Clear'}</span>
               </motion.button>
             )}
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-all cursor-pointer"
+                className="p-2 rounded-xl text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.06] transition-all cursor-pointer border border-transparent hover:border-white/[0.06]"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
@@ -107,18 +110,18 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
         {/* search */}
         {history.length > 2 && (
           <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search calculations..."
-              className="w-full h-8 pl-8 pr-3 text-xs bg-zinc-800/40 border border-white/[0.05] rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/30 focus:bg-zinc-800/60 focus:ring-1 focus:ring-emerald-500/15 transition-all"
+              className="w-full h-9 pl-9 pr-3 text-xs bg-zinc-800/50 border border-white/[0.06] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/30 focus:bg-zinc-800/70 focus:ring-1 focus:ring-emerald-500/15 transition-all shadow-sm"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-white/5 cursor-pointer transition-all"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -129,30 +132,30 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
 
       {/* ──── list ──── */}
       <ScrollArea className="flex-1">
-        <div className="p-3 space-y-4">
+        <div className="p-4 space-y-3">
           <AnimatePresence mode="popLayout">
             {filtered.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center py-16 text-zinc-600">
+                className="flex flex-col items-center justify-center py-20 text-zinc-600">
                 {search ? (
                   <>
-                    <div className="w-14 h-14 rounded-2xl bg-zinc-800/40 border border-white/[0.04] flex items-center justify-center mb-3">
-                      <Search className="w-6 h-6 opacity-25" />
+                    <div className="w-16 h-16 rounded-2xl bg-zinc-800/50 border border-white/[0.04] flex items-center justify-center mb-4 shadow-lg">
+                      <Search className="w-7 h-7 opacity-20" />
                     </div>
-                    <p className="text-sm font-medium text-zinc-400">No matches found</p>
-                    <p className="text-[11px] mt-1 opacity-60">Try a different search term</p>
+                    <p className="text-sm font-semibold text-zinc-400">No matches found</p>
+                    <p className="text-[11px] mt-1.5 opacity-50">Try a different search term</p>
                   </>
                 ) : (
                   <>
                     <motion.div
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                      className="w-14 h-14 rounded-2xl bg-zinc-800/40 border border-white/[0.04] flex items-center justify-center mb-3"
+                      className="w-16 h-16 rounded-2xl bg-zinc-800/50 border border-white/[0.04] flex items-center justify-center mb-4 shadow-lg"
                     >
-                      <Clock className="w-6 h-6 opacity-15" />
+                      <Clock className="w-7 h-7 opacity-10" />
                     </motion.div>
-                    <p className="text-sm font-medium text-zinc-400">No calculations yet</p>
-                    <p className="text-[11px] mt-1 opacity-60">Your results will appear here</p>
+                    <p className="text-sm font-semibold text-zinc-400">No calculations yet</p>
+                    <p className="text-[11px] mt-1.5 opacity-50">Your results will appear here</p>
                   </>
                 )}
               </motion.div>
@@ -165,10 +168,14 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
                 {/* Grouped items */}
                 {grouped.map(group => (
                   <div key={group.label}>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2 px-1">
-                      {group.label}
-                    </p>
-                    <div className="space-y-1">
+                    <div className="flex items-center gap-2 mb-2 px-1">
+                      <div className="h-px flex-1 bg-gradient-to-r from-white/[0.06] to-transparent" />
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                        {group.label}
+                      </p>
+                      <div className="h-px flex-1 bg-gradient-to-l from-white/[0.06] to-transparent" />
+                    </div>
+                    <div className="space-y-1.5">
                       {group.items.map((item, index) => (
                         <HistoryEntry
                           key={`${item.id || ''}-${item.expression}-${index}`}
@@ -187,9 +194,13 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
 
       {/* ──── footer stats ──── */}
       {history.length > 0 && (
-        <div className="px-4 py-2.5 border-t border-white/[0.04] flex items-center justify-center">
+        <div className="px-5 py-3 border-t border-white/[0.04] bg-zinc-950/50 flex items-center justify-between">
           <p className="text-[10px] text-zinc-600 tabular-nums">
-            {history.length} stored · max 50 · tap to reuse
+            {history.length} stored &middot; max 50
+          </p>
+          <p className="text-[10px] text-zinc-600 flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-emerald-500/40" />
+            Tap to reuse
           </p>
         </div>
       )}
@@ -198,7 +209,7 @@ export function HistoryPanel({ onClose }: HistoryPanelProps) {
 }
 
 /* ═══════════════════════════════════════
-   HISTORY ENTRY
+   HISTORY ENTRY — using div (not button) to avoid nested <button>
    ═══════════════════════════════════════ */
 function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => void }) {
   const [copied, setCopied] = useState(false)
@@ -213,6 +224,13 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
     }).catch(() => {})
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
     <motion.div
       layout
@@ -221,21 +239,24 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
       exit={{ opacity: 0, x: -20, scale: 0.95 }}
       transition={{ duration: 0.2 }}
     >
-      <button
+      <div
         onClick={onClick}
-        className="w-full text-left px-3 py-3 rounded-xl bg-zinc-800/20 hover:bg-zinc-800/40 active:bg-white/[0.06] transition-all cursor-pointer border border-white/[0.03] hover:border-white/[0.06] group"
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        className="w-full text-left px-3.5 py-3 rounded-2xl bg-zinc-800/15 hover:bg-zinc-800/35 active:bg-white/[0.06] transition-all cursor-pointer border border-white/[0.04] hover:border-white/[0.08] group shadow-sm hover:shadow-md"
         aria-label={`Use result: ${item.result}`}
       >
         {/* top row: expression + badges */}
-        <div className="flex items-center gap-2 mb-1.5">
+        <div className="flex items-center gap-2 mb-2">
           <p className="text-[11px] text-zinc-500 font-mono truncate flex-1 leading-tight">
             {item.expression}
           </p>
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md flex items-center gap-0.5 ${
+            <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md flex items-center gap-0.5 ${
               item.mode === 'scientific'
-                ? 'bg-violet-500/10 text-violet-400 border border-violet-500/15'
-                : 'bg-zinc-800/80 text-zinc-500 border border-white/[0.04]'
+                ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20'
+                : 'bg-zinc-800/80 text-zinc-500 border border-white/[0.05]'
             }`}>
               {item.mode === 'scientific' ? (
                 <><Atom className="w-2.5 h-2.5" />SCI</>
@@ -247,8 +268,8 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
             {/* copy button */}
             <button
               onClick={handleCopy}
-              className="p-1 rounded-md hover:bg-white/5 active:bg-white/10 transition-all cursor-pointer opacity-0 group-hover:opacity-100"
-              aria-label="Copy"
+              className="p-1 rounded-lg hover:bg-white/[0.08] active:bg-white/[0.12] transition-all cursor-pointer opacity-0 group-hover:opacity-100 focus:opacity-100"
+              aria-label="Copy result"
             >
               <AnimatePresence mode="wait">
                 {copied ? (
@@ -257,13 +278,13 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
                   </motion.div>
                 ) : (
                   <motion.div key="p" initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 0.5 }}>
-                    <Copy className="w-3 h-3 text-zinc-500" />
+                    <Copy className="w-3 h-3 text-zinc-500 hover:text-zinc-300" />
                   </motion.div>
                 )}
               </AnimatePresence>
             </button>
 
-            <ArrowRight className="w-3 h-3 text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <ArrowRight className="w-3 h-3 text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
@@ -271,20 +292,23 @@ function HistoryEntry({ item, onClick }: { item: HistoryItem; onClick: () => voi
         <div className="flex items-center gap-2 min-w-0">
           {/* exact form badge */}
           {item.exactForm && item.exactForm !== item.result && (
-            <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 border border-amber-500/15 px-1.5 py-0.5 rounded-md flex-shrink-0">
+            <span className="text-[11px] font-semibold text-amber-400 font-mono truncate bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-lg flex-shrink-0 shadow-sm">
               {item.exactForm}
             </span>
           )}
-          <p className="text-[0.95rem] font-bold text-white font-mono truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <p className="text-[1rem] font-bold text-white font-mono truncate tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {item.result}
           </p>
         </div>
 
         {/* timestamp */}
         {timeStr && (
-          <p className="text-[9px] text-zinc-600 mt-1.5 font-mono pl-0.5">{timeStr}</p>
+          <p className="text-[9px] text-zinc-600 mt-2 font-mono pl-0.5 flex items-center gap-1">
+            <Clock className="w-2.5 h-2.5 opacity-40" />
+            {timeStr}
+          </p>
         )}
-      </button>
+      </div>
     </motion.div>
   )
 }

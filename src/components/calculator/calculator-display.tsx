@@ -33,9 +33,9 @@ export function CalculatorDisplay() {
   const isError = display === 'Error'
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 p-5 sm:p-6 shadow-inner border border-white/[0.05] relative group overflow-hidden">
+    <div className="w-full rounded-2xl bg-gradient-to-br from-zinc-950/95 to-zinc-900/95 p-5 sm:p-6 shadow-inner border border-white/[0.06] relative group overflow-hidden">
       {/* top highlight line */}
-      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
 
       {/* result glow */}
       <AnimatePresence>
@@ -44,7 +44,7 @@ export function CalculatorDisplay() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="result-glow absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] to-amber-500/[0.02] pointer-events-none rounded-2xl"
+            className="result-glow absolute inset-0 bg-gradient-to-br from-emerald-500/[0.06] to-amber-500/[0.03] pointer-events-none rounded-2xl"
           />
         )}
       </AnimatePresence>
@@ -64,8 +64,8 @@ export function CalculatorDisplay() {
           {/* mode badge */}
           <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
             mode === 'scientific'
-              ? 'bg-violet-500/10 text-violet-400/60 border border-violet-500/10'
-              : 'bg-zinc-800/60 text-zinc-500 border border-white/[0.04]'
+              ? 'bg-violet-500/15 text-violet-400/70 border border-violet-500/15'
+              : 'bg-zinc-800/70 text-zinc-500 border border-white/[0.05]'
           }`}>
             {mode === 'scientific' ? 'SCI' : 'BAS'}
           </span>
@@ -134,7 +134,7 @@ export function CalculatorDisplay() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             onClick={handleCopy}
-            className="lg:opacity-0 lg:group-hover:opacity-100 mb-2 p-1.5 rounded-lg hover:bg-white/5 active:bg-white/10 transition-all cursor-pointer border border-transparent hover:border-white/[0.06]"
+            className="lg:opacity-0 lg:group-hover:opacity-100 mb-2 p-1.5 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all cursor-pointer border border-transparent hover:border-white/[0.06] focus:opacity-100"
             aria-label="Copy result"
           >
             <AnimatePresence mode="wait">
@@ -153,7 +153,7 @@ export function CalculatorDisplay() {
       </div>
 
       {/* bottom divider */}
-      <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+      <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
     </div>
   )
 }
