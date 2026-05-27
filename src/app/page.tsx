@@ -1,4 +1,4 @@
-'use client'
+'use client' 
 
 import { CalculatorApp } from '@/components/calculator/calculator-app'
 
