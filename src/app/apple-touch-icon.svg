@@ -3,7 +3,7 @@
     <linearGradient id="bg" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#0f172a"/>
       <stop offset="100%" stop-color="#1e293b"/> 
-    </linearGradient>
+    </linearGradient> 
     <linearGradient id="border" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#34d399"/>
       <stop offset="50%" stop-color="#10b981"/>
