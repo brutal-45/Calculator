@@ -102,7 +102,7 @@ Every calculation is saved to a local **SQLite** database via **Prisma ORM**:
 - **Keyboard shortcut badges** in the footer for quick reference
 - **Animated text shimmer** on the BrutalTools branding
 - **Custom SVG logo** with lightning bolt, gradient glow, and corner sparkle
-- **Fully responsive** — optimized for desktop and mobile viewports
+- **Fully responsive** — optimized for desktop and mobile viewports 
 
 ---
 
