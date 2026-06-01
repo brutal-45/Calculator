@@ -39,7 +39,7 @@
 
 ---
 
-## 🖼️ Screenshots
+## 🖼️ Screenshots 
 
 | Mode | Description |
 |:---:|:---|
