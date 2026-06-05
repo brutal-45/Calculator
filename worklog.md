@@ -1,5 +1,4 @@
 
-
 Work Log: 
 - Read and analyzed all 14 source files in the calculator project 
 - Ran ESLint — no lint errors found
