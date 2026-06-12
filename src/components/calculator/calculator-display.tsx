@@ -1,4 +1,4 @@
-'use client'
+'use client' 
 
 import { useCalculatorStore } from '@/stores/calculator-store'
 import { motion, AnimatePresence } from 'framer-motion'
