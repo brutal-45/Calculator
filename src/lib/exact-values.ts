@@ -1,4 +1,4 @@
-// Exact value lookup system for common mathematical results
+// Exact value lookup system for common mathematical results 
 // Maps computed decimal values to their exact mathematical forms
 
 interface ExactMatch {
