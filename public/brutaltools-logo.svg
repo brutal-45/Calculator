@@ -10,7 +10,7 @@
       <stop offset="40%" stopColor="#FBBF24"/>
       <stop offset="100%" stopColor="#F59E0B"/>
     </linearGradient>
-    <linearGradient id="boltInner" x1="210" y1="120" x2="310" y2="400" gradientUnits="userSpaceOnUse"> 
+    <linearGradient id="boltInner" x1="210" y1="120" x2="310" y2="400" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stopColor="#FFFBEB"/>
       <stop offset="100%" stopColor="#FDE68A"/>
     </linearGradient>
