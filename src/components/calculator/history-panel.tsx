@@ -1,4 +1,4 @@
-'use client' 
+'use client'
 
 import { useCalculatorStore, type HistoryItem } from '@/stores/calculator-store'
 import { ScrollArea } from '@/components/ui/scroll-area'
