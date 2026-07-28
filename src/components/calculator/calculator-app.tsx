@@ -1,4 +1,4 @@
-'use client'
+'use client' 
 
 import { useCalculatorStore, type CalculatorMode } from '@/stores/calculator-store'
 import { CalculatorDisplay } from './calculator-display'
